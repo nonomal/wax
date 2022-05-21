@@ -51,4 +51,3 @@ go/mobile/lib/*.jar
 go/mobile/lib/*.aar
 go/mobile/lib/*.xcframework
 lib/assets/version.txt
-pubspec.lock
