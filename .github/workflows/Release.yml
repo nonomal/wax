@@ -231,8 +231,8 @@ jobs:
         run: |
           go install github.com/go-flutter-desktop/hover@latest
 
-      - name: Modify version (desktop)
-        if: steps.check_asset.outputs.skip_build != 'true' && ( matrix.config.target != 'linux' && matrix.config.target == 'windows' && matrix.config.target == 'macos')
+      - name: Upgrade deps version (non-desktop)
+        if: steps.check_asset.outputs.skip_build != 'true' && ( matrix.config.target != 'linux' && matrix.config.target != 'windows' && matrix.config.target != 'macos')
         run: |
           sed -i "s/another_xlider: 1.0.1+2/another_xlider: ^1.0.1+2/g" pubspec.yaml
           sed -i "s/flutter_styled_toast: 2.0.0/flutter_styled_toast: ^2.0.0/g" pubspec.yaml
