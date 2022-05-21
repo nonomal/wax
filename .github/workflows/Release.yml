@@ -54,25 +54,25 @@ jobs:
         config:
           - target: linux
             host: ubuntu-latest
-            flutter_version: '2.10.5'
+            flutter_version: '2.10.3'
           - target: windows
             host: windows-latest
-            flutter_version: '2.10.5'
+            flutter_version: '2.10.3'
           - target: macos
             host: macos-latest
-            flutter_version: '2.10.5'
+            flutter_version: '2.10.3'
           - target: ios
             host: macos-latest
             flutter_version: '3.0.0'
           - target: android-arm32
             host: ubuntu-latest
-            flutter_version: '2.10.5'
+            flutter_version: '2.10.3'
           - target: android-arm64
             host: ubuntu-latest
-            flutter_version: '2.10.5'
+            flutter_version: '2.10.3'
           - target: android-x86_64
             host: ubuntu-latest
-            flutter_version: '2.10.5'
+            flutter_version: '2.10.3'
           - target: android-arm32
             host: ubuntu-latest
             flutter_version: '3.0.0'
@@ -181,6 +181,7 @@ jobs:
         if: steps.check_asset.outputs.skip_build != 'true'
         run: |
           flutter pub upgrade
+          flutter pub get
 
       - name: Cache Flutter dependencies (Linux/Android)
         if: steps.check_asset.outputs.skip_build != 'true' && ( matrix.config.target == 'android-arm32' || matrix.config.target == 'android-arm64' || matrix.config.target == 'android-x86_64' || matrix.config.target == 'linux' )
