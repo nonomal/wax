@@ -61,10 +61,7 @@ class _InitScreenState extends State<InitScreen> {
             var padding = min / 6;
             return Container(
               padding: EdgeInsets.all(padding),
-              child: Image.asset(
-                "lib/assets/startup.png",
-                fit: BoxFit.contain,
-              ),
+              child: const Text("Loading"),
             );
           },
         ),
