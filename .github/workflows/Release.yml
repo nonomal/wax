@@ -55,9 +55,6 @@ jobs:
           - target: linux
             host: ubuntu-latest
             flutter_version: '2.10.3'
-          - target: linux
-            host: ubuntu-latest
-            flutter_version: '2.10.3'
           - target: windows
             host: windows-latest
             flutter_version: '2.10.3'
@@ -179,6 +176,11 @@ jobs:
         if: steps.check_asset.outputs.skip_build != 'true'
         run: |
           protoc --dart_out=lib/ --go_out=go/ protos/*.proto
+
+      - name: pub upgrade
+        if: steps.check_asset.outputs.skip_build != 'true'
+        run: |
+          flutter pub upgrade
 
       - name: Cache Flutter dependencies (Linux/Android)
         if: steps.check_asset.outputs.skip_build != 'true' && ( matrix.config.target == 'android-arm32' || matrix.config.target == 'android-arm64' || matrix.config.target == 'android-x86_64' || matrix.config.target == 'linux' )
