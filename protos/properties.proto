@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+option go_package = "protos/";
+
+message SavePropertyQuery {
+  string k = 1;
+  string v = 2;
+}
+
+message LoadPropertyQuery {
+  string k = 1;
+}
+
+message LoadPropertyResult {
+  string v = 1;
+}
+
+message FetchComicQuery {
+  string host = 1;
+  string tag = 2;
+  int64 pageNumber = 3;
+}
+
+message FetchComicResult  {
+  repeated ComicSimple comics = 1;
+  int64 currentPage = 2;
+  int64 maxPage = 3;
+}
+
+message ComicSimple  {
+  int64 id = 1;
+  string cover = 2;
+  string title = 3;
+}
+
+message ComicInfoQuery  {
+  string host = 1;
+  int64 id = 2;
+}
+
+message ComicInfoResult  {
+  ComicInfo comicInfo = 1;
+  Uploader  uploader = 2;
+}
+
+message ComicInfo  {
+  repeated string labels = 1;
+  repeated string tags = 2;
+  string description = 3;
+}
+
+message Uploader  {
+}
+
+message ComicPage  {
+  string caption = 1;
+  string url = 2;
+}
+
+message ComicPagesResult {
+  repeated ComicPage pages = 1;
+}
+
+message CacheImageQuery {
+  string host = 1;
+  string url = 2;
+}
+
+message CacheImageResult {
+  string localPath = 1;
+  int32 width = 2;
+  int32 height = 3;
+}
+
+message AutoCleanQuery {
+  int64 expire = 1;
+}
+
+message HttpGetQuery {
+  string url = 1;
+}
+
+message HttpGetResult {
+  string content = 1;
+}
+
