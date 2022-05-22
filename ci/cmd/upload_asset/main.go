@@ -54,32 +54,35 @@ func main() {
 	switch target {
 	case "macos":
 		releaseFilePath = "build/build.dmg"
-		releaseFileName = fmt.Sprintf("wax-%v-flutter_%v-macos-intel.dmg", version.Code, flutterVersion)
+		releaseFileName = fmt.Sprintf("wax-%v-macos-intel.dmg", version.Code)
 		contentType = "application/octet-stream"
 	case "ios":
 		releaseFilePath = "build/nosign.ipa"
-		releaseFileName = fmt.Sprintf("wax-%v-flutter_%v-ios-nosign.ipa", version.Code, flutterVersion)
+		releaseFileName = fmt.Sprintf("wax-%v-ios-nosign.ipa", version.Code)
 		contentType = "application/octet-stream"
 	case "windows":
 		releaseFilePath = "build/build.zip"
-		releaseFileName = fmt.Sprintf("wax-%v-flutter_%v-windows-x86_64.zip", version.Code, flutterVersion)
+		releaseFileName = fmt.Sprintf("wax-%v-windows-x86_64.zip", version.Code)
 		contentType = "application/octet-stream"
 	case "linux":
 		releaseFilePath = "build/build.AppImage"
-		releaseFileName = fmt.Sprintf("wax-%v-flutter_%v-linux-x86_64.AppImage", version.Code, flutterVersion)
+		releaseFileName = fmt.Sprintf("wax-%v-linux-x86_64.AppImage", version.Code)
 		contentType = "application/octet-stream"
 	case "android-arm32":
 		releaseFilePath = "build/app/outputs/flutter-apk/app-release.apk"
-		releaseFileName = fmt.Sprintf("wax-%v-flutter_%v-android-arm32.apk", version.Code, flutterVersion)
+		releaseFileName = fmt.Sprintf("wax-%v-android-arm32.apk", version.Code)
 		contentType = "application/octet-stream"
 	case "android-arm64":
 		releaseFilePath = "build/app/outputs/flutter-apk/app-release.apk"
-		releaseFileName = fmt.Sprintf("wax-%v-flutter_%v-android-arm64.apk", version.Code, flutterVersion)
+		releaseFileName = fmt.Sprintf("wax-%v-android-arm64.apk", version.Code)
 		contentType = "application/octet-stream"
 	case "android-x86_64":
 		releaseFilePath = "build/app/outputs/flutter-apk/app-release.apk"
-		releaseFileName = fmt.Sprintf("wax-%v-flutter_%v-android-x86_64.apk", version.Code, flutterVersion)
+		releaseFileName = fmt.Sprintf("wax-%v-android-x86_64.apk", version.Code)
 		contentType = "application/octet-stream"
+	}
+	if strings.HasPrefix(flutterVersion, "2") {
+		releaseFileName = "old_flutter-" + releaseFileName
 	}
 	releaseFilePath = path.Join("..", releaseFilePath)
 	info, err := os.Stat(releaseFilePath)

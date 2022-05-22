@@ -49,19 +49,22 @@ func main() {
 	var releaseFileName string
 	switch target {
 	case "macos":
-		releaseFileName = fmt.Sprintf("wax-%v-flutter_%v-macos-intel.dmg", version.Code, flutterVersion)
+		releaseFileName = fmt.Sprintf("wax-%v-macos-intel.dmg", version.Code)
 	case "ios":
-		releaseFileName = fmt.Sprintf("wax-%v-flutter_%v-ios-nosign.ipa", version.Code, flutterVersion)
+		releaseFileName = fmt.Sprintf("wax-%v-ios-nosign.ipa", version.Code)
 	case "windows":
-		releaseFileName = fmt.Sprintf("wax-%v-flutter_%v-windows-x86_64.zip", version.Code, flutterVersion)
+		releaseFileName = fmt.Sprintf("wax-%v-windows-x86_64.zip", version.Code)
 	case "linux":
-		releaseFileName = fmt.Sprintf("wax-%v-flutter_%v-linux-x86_64.AppImage", version.Code, flutterVersion)
+		releaseFileName = fmt.Sprintf("wax-%v-linux-x86_64.AppImage", version.Code)
 	case "android-arm32":
-		releaseFileName = fmt.Sprintf("wax-%v-flutter_%v-android-arm32.apk", version.Code, flutterVersion)
+		releaseFileName = fmt.Sprintf("wax-%v-android-arm32.apk", version.Code)
 	case "android-arm64":
-		releaseFileName = fmt.Sprintf("wax-%v-flutter_%v-android-arm64.apk", version.Code, flutterVersion)
+		releaseFileName = fmt.Sprintf("wax-%v-android-arm64.apk", version.Code)
 	case "android-x86_64":
-		releaseFileName = fmt.Sprintf("wax-%v-flutter_%v-android-x86_64.apk", version.Code, flutterVersion)
+		releaseFileName = fmt.Sprintf("wax-%v-android-x86_64.apk", version.Code)
+	}
+	if strings.HasPrefix(flutterVersion, "2") {
+		releaseFileName = "old_flutter-" + releaseFileName
 	}
 	// get version
 	getReleaseRequest, err := http.NewRequest(

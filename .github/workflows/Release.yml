@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  go_version: '1.16'
+  go_version: '1.17'
   flutter_channel: 'stable'
   GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
@@ -63,25 +63,25 @@ jobs:
             flutter_version: '2.10.3'
           - target: ios
             host: macos-latest
-            flutter_version: '3.0.0'
+            flutter_version: '3.0.1'
           - target: android-arm32
             host: ubuntu-20.04
-            flutter_version: '2.10.3'
+            flutter_version: '2.10.5'
           - target: android-arm64
             host: ubuntu-20.04
-            flutter_version: '2.10.3'
+            flutter_version: '2.10.5'
           - target: android-x86_64
             host: ubuntu-20.04
-            flutter_version: '2.10.3'
+            flutter_version: '2.10.5'
           - target: android-arm32
             host: ubuntu-20.04
-            flutter_version: '3.0.0'
+            flutter_version: '3.0.1'
           - target: android-arm64
             host: ubuntu-20.04
-            flutter_version: '3.0.0'
+            flutter_version: '3.0.1'
           - target: android-x86_64
             host: ubuntu-20.04
-            flutter_version: '3.0.0'
+            flutter_version: '3.0.1'
 
     runs-on: ${{ matrix.config.host }}
 
@@ -234,13 +234,13 @@ jobs:
           go install github.com/go-flutter-desktop/hover@latest
 
       - name: Upgrade deps version (Android)
-        if: steps.check_asset.outputs.skip_build != 'true' && ( matrix.config.target != 'linux' && matrix.config.target != 'windows' && matrix.config.target != 'macos' && matrix.config.target != 'ios')
+        if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.host != 'macos' && startsWith(matrix.config.flutter_version, '3')
         run: |
           sed -i "s/another_xlider: 1.0.1+2/another_xlider: ^1.0.1+2/g" pubspec.yaml
           sed -i "s/flutter_styled_toast: 2.0.0/flutter_styled_toast: ^2.0.0/g" pubspec.yaml
 
       - name: Upgrade deps version (iOS)
-        if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.target == 'ios'
+        if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.host == 'macos' && startsWith(matrix.config.flutter_version, '3')
         run: |
           brew install gnu-sed
           gsed -i "s/another_xlider: 1.0.1+2/another_xlider: ^1.0.1+2/g" pubspec.yaml
