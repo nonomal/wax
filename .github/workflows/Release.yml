@@ -226,8 +226,7 @@ jobs:
           curl -LO https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
           chmod a+x appimagetool-x86_64.AppImage
           sed 's|AI\x02|\x00\x00\x00|g' -i appimagetool-x86_64.AppImage
-          ./appimagetool-x86_64.AppImage --appimage-extract
-          mv squashfs-root appimagetool
+          mv appimagetool-x86_64.AppImage appimagetool
 
       - name: Install hover (desktop)
         if: steps.check_asset.outputs.skip_build != 'true' && ( matrix.config.target == 'linux' || matrix.config.target == 'windows' || matrix.config.target == 'macos')
