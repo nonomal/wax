@@ -43,12 +43,17 @@ class Methods {
         .v;
   }
 
-  Future<FetchComicResult> fetchComic(String tag, int pageNumber) async {
+  Future<FetchComicResult> fetchComic(
+    String filterName,
+    String filterValue,
+    int pageNumber,
+  ) async {
     final buff = await _flatInvoke(
         "fetchComic",
         FetchComicQuery(
           host: host,
-          tag: tag,
+          filterName: filterName,
+          filterValue: filterValue,
           pageNumber: $fixnum.Int64.fromInts(0, pageNumber),
         ));
     return FetchComicResult.fromBuffer(buff);

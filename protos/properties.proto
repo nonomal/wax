@@ -17,8 +17,9 @@ message LoadPropertyResult {
 
 message FetchComicQuery {
   string host = 1;
-  string tag = 2;
-  int64 pageNumber = 3;
+  string filterName = 2;
+  string filterValue = 3;
+  int64 pageNumber = 4;
 }
 
 message FetchComicResult  {

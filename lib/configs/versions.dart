@@ -111,9 +111,9 @@ class _VersionInfoState extends State<VersionInfo> {
                   height: 1.3,
                 ),
               ),
-              VersionBadged(child: "dirty" == _version
+              "dirty" == _version
                   ? _buildDirty()
-                  : _buildNewVersion(_latestVersion)),
+                  : _buildNewVersion(_latestVersion),
               Expanded(child: Container()),
             ],
           ),
@@ -129,7 +129,7 @@ class _VersionInfoState extends State<VersionInfo> {
         TextSpan(
           children: [
             WidgetSpan(
-              child: Badged(
+              child: VersionBadged(
                 child: Container(
                   padding: const EdgeInsets.only(right: 12),
                   child: Text(
@@ -137,7 +137,6 @@ class _VersionInfoState extends State<VersionInfo> {
                     style: const TextStyle(height: 1.3),
                   ),
                 ),
-                badge: "1",
               ),
             ),
             const TextSpan(text: "  "),
@@ -183,14 +182,17 @@ class _VersionInfoState extends State<VersionInfo> {
   }
 
   Widget _buildDirty() {
-    return Text.rich(
-      TextSpan(
-        text: "下载RELEASE版     ",
-        style: TextStyle(
-          height: 1.3,
-          color: Theme.of(context).colorScheme.primary,
+    return VersionBadged(
+      child: Text.rich(
+        TextSpan(
+          text: "下载RELEASE版     ",
+          style: TextStyle(
+            height: 1.3,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          recognizer: TapGestureRecognizer()
+            ..onTap = () => openUrl(_releasesUrl),
         ),
-        recognizer: TapGestureRecognizer()..onTap = () => openUrl(_releasesUrl),
       ),
     );
   }
