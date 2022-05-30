@@ -59,6 +59,17 @@ class Methods {
     return FetchComicResult.fromBuffer(buff);
   }
 
+  Future<FetchComicResult> searchComic(String keyword, int page) async {
+    final buff = await _flatInvoke(
+        "searchComic",
+        ComicSearchQuery(
+          host: host,
+          query: keyword,
+          pageNumber: $fixnum.Int64.fromInts(0, page),
+        ));
+    return FetchComicResult.fromBuffer(buff);
+  }
+
   Future saveImageToGallery(String path) async {
     if (Platform.isAndroid || Platform.isIOS) {
       return await _channel.invokeMethod("saveImageToGallery", path);

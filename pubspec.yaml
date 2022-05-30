@@ -48,6 +48,7 @@ dependencies:
   flutter_svg: ^1.0.3
   another_xlider: 1.0.1+2
   scrollable_positioned_list: ^0.2.0-nullsafety.0
+  flutter_search_bar: ^3.0.0-dev.1
 
 dev_dependencies:
   flutter_test:

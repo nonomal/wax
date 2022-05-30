@@ -85,3 +85,9 @@ message HttpGetResult {
   string content = 1;
 }
 
+message ComicSearchQuery  {
+  string host = 1;
+  string query = 2;
+  int64 pageNumber = 3;
+}
+

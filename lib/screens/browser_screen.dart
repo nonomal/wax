@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_search_bar/flutter_search_bar.dart';
 import 'package:wax/basic/methods.dart';
 import 'package:wax/protos/properties.pb.dart';
+import 'package:wax/screens/search_screen.dart';
 
 import '../basic/cates.dart';
 import 'components/actions.dart';
@@ -23,6 +25,33 @@ class _BrowserScreenState extends State<BrowserScreen>
   @override
   bool get wantKeepAlive => true;
 
+  late final SearchBar _searchBar = SearchBar(
+    hintText: '搜索',
+    inBar: false,
+    setState: setState,
+    onSubmitted: (value) {
+      if (value.isNotEmpty) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SearchScreen(keyword: value),
+          ),
+        );
+      }
+    },
+    buildDefaultAppBar: (BuildContext context) {
+      return AppBar(
+        title: Text(_title()),
+        actions: [
+          ...alwaysInActions(),
+          const BrowserBottomSheetAction(),
+          _searchBar.getSearchAction(context),
+          chooseCateAction(context),
+        ],
+      );
+    },
+  );
+
   late final _tag = widget.tag;
   var _cate = "";
 
@@ -30,14 +59,7 @@ class _BrowserScreenState extends State<BrowserScreen>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_title()),
-        actions: [
-          ...alwaysInActions(),
-          const BrowserBottomSheetAction(),
-          chooseCateAction(context),
-        ],
-      ),
+      appBar: _searchBar.build(context),
       body: ComicPager(
         key: Key("$_tag:$_cate"),
         onPage: _onPage,
