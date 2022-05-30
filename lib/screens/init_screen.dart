@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wax/configs/host.dart';
 import 'package:wax/configs/pager_column_number.dart';
 import 'package:wax/configs/pager_controller_mode.dart';
 import 'package:wax/configs/pager_view_mode.dart';
@@ -35,6 +36,7 @@ class _InitScreenState extends State<InitScreen> {
     await initPagerColumnCount();
     await initPagerControllerMode();
     await initPagerViewMode();
+    await initHost();
     autoCheckNewVersion();
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (BuildContext context) => const AppScreen()),

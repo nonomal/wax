@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_search_bar/flutter_search_bar.dart';
 import 'package:wax/basic/methods.dart';
+import 'package:wax/configs/host.dart';
 import 'package:wax/protos/properties.pb.dart';
 import 'package:wax/screens/search_screen.dart';
 
@@ -61,7 +62,7 @@ class _BrowserScreenState extends State<BrowserScreen>
     return Scaffold(
       appBar: _searchBar.build(context),
       body: ComicPager(
-        key: Key("$_tag:$_cate"),
+        key: Key("$host:$_tag:$_cate"),
         onPage: _onPage,
       ),
     );
@@ -105,5 +106,21 @@ class _BrowserScreenState extends State<BrowserScreen>
       },
       icon: const Icon(Icons.category),
     );
+  }
+
+  @override
+  void initState() {
+    hostEvent.subscribe(_setState);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    hostEvent.unsubscribe(_setState);
+    super.dispose();
+  }
+
+  _setState(_) {
+    setState(() {});
   }
 }
