@@ -13,6 +13,7 @@ import '../configs/reader_slider_position.dart';
 import '../configs/reader_type.dart';
 import '../configs/themes.dart';
 import '../configs/versions.dart';
+import '../configs/volume_controller.dart';
 import 'app_screen.dart';
 
 class InitScreen extends StatefulWidget {
@@ -37,6 +38,7 @@ class _InitScreenState extends State<InitScreen> {
     await initPagerControllerMode();
     await initPagerViewMode();
     await initHost();
+    await initVolumeController();
     autoCheckNewVersion();
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (BuildContext context) => const AppScreen()),
