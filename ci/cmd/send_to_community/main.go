@@ -8,6 +8,7 @@ import (
 	"github.com/andersfylling/disgord"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"io/ioutil"
+	"log"
 	"os"
 	"strings"
 )
@@ -31,7 +32,7 @@ func main() {
 			"更新内容:\n"+
 			"%v\n\n"+
 			"https://github.com/%v/%v/releases/tag/%v",
-		"wax", version.Code, version.Info, "niuhuan", "wax", version.Code,
+		commons.Repo, version.Code, version.Info, commons.Owner, commons.Repo, version.Code,
 	)
 	// get accounts
 	tgToken := os.Getenv("TG_BOT_TOKEN")
@@ -57,8 +58,7 @@ func main() {
 func sendMessageToTg(token string, ids []int64, message string) {
 	bot, err := tgbotapi.NewBotAPI(token)
 	if err != nil {
-		println(err.Error())
-		return
+		log.Panic(err)
 	}
 	for _, id := range ids {
 		msg := tgbotapi.NewMessage(id, message)
