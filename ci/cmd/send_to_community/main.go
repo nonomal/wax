@@ -39,6 +39,7 @@ func main() {
 	tgChatIdsStr := os.Getenv("TG_CHAT_IDS")
 	discordToken := os.Getenv("DISCORD_BOT_TOKEN")
 	discordChatIdsStr := os.Getenv("DISCORD_CHAT_IDS")
+	fmt.Printf(" : %v : %v : %v : %v :", len(tgToken), len(tgChatIdsStr), len(discordToken), len(discordChatIdsStr))
 	if tgToken != "" && tgChatIdsStr != "" {
 		var tgChatIds []int64
 		json.Unmarshal([]byte(tgChatIdsStr), &tgChatIds)
