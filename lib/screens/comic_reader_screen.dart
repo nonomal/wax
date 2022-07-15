@@ -12,6 +12,7 @@ import '../../configs/reader_controller_type.dart';
 import '../../configs/reader_direction.dart';
 import '../../configs/reader_slider_position.dart';
 import '../../configs/reader_type.dart';
+import '../configs/volume_controller.dart';
 import './components/content_error.dart';
 import './components/content_loading.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -120,8 +121,6 @@ class _ComicReaderScreenState extends State<ComicReaderScreen> {
 // 仅最后一次监听生效
 // event可能为DOWN/UP
 
-const _listVolume = false;
-
 var _volumeListenCount = 0;
 
 void _onVolumeEvent(dynamic args) {
@@ -220,6 +219,7 @@ abstract class _ComicReaderState extends State<_ComicReader> {
 
   _needJumpTo(int pageIndex, bool animation);
 
+  late final bool _listVolume = volumeController;
   late bool _fullScreen;
   late int _current;
   late int _slider;

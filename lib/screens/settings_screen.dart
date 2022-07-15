@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:wax/configs/themes.dart';
 import 'package:wax/configs/versions.dart';
+
+import '../configs/volume_controller.dart';
+
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
 
@@ -17,6 +20,9 @@ class SettingsScreen extends StatelessWidget {
           const Divider(),
           lightThemeSetting(),
           darkThemeSetting(),
+          const Divider(),
+          const Divider(),
+          volumeControllerSetting(),
           const Divider(),
         ],
       ),

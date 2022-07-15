@@ -8,7 +8,6 @@ import (
 	"github.com/andersfylling/disgord"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"io/ioutil"
-	"log"
 	"os"
 	"strings"
 )
@@ -59,7 +58,7 @@ func main() {
 func sendMessageToTg(token string, ids []int64, message string) {
 	bot, err := tgbotapi.NewBotAPI(token)
 	if err != nil {
-		log.Panic(err)
+		fmt.Sprintf("tgbotapi error : %v (error : %v)", err.Error())
 	}
 	for _, id := range ids {
 		msg := tgbotapi.NewMessage(id, message)
