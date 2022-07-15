@@ -85,7 +85,7 @@ class MainActivity : FlutterActivity() {
                             call.argument("params")!!
                         )
                     }
-                    "androidSaveFileToImage" -> {
+                    "saveImageToGallery" -> {
                         saveImage(call.argument("path")!!)
                     }
                     "androidGetModes" -> {

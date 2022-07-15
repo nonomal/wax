@@ -46,7 +46,7 @@ import LocalAuthentication
                   }
 
               }
-              else if call.method == "iosSaveFileToImage"{
+              else if call.method == "saveImageToGallery"{
                   if let args = call.arguments as? Dictionary<String, Any>,
                      let path = args["path"] as? String{
                       
