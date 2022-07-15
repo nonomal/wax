@@ -72,7 +72,7 @@ class Methods {
 
   Future saveImageToGallery(String path) async {
     if (Platform.isAndroid || Platform.isIOS) {
-      return await _channel.invokeMethod("saveImageToGallery", path);
+      return await _channel.invokeMethod("saveImageToGallery", {'path':path});
     }
     throw "没有适配的平台";
   }
