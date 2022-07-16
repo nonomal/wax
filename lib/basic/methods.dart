@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -72,7 +73,7 @@ class Methods {
 
   Future saveImageToGallery(String path) async {
     if (Platform.isAndroid || Platform.isIOS) {
-      return await _channel.invokeMethod("saveImageToGallery", {'path':path});
+      return await _channel.invokeMethod("saveImageToGallery", {'path': path});
     }
     throw "没有适配的平台";
   }
@@ -149,6 +150,56 @@ class Methods {
           id: id,
         ));
     return ComicPagesResult.fromBuffer(buff);
+  }
+
+  Future login(String username, String password) {
+    return _flatInvoke(
+        "login",
+        UserLoginQuery(
+          host: host,
+          username: username,
+          password: password,
+        ));
+  }
+
+  Future register({
+    required String username,
+    required String nickname,
+    required String email,
+    required String sex,
+    required String pass,
+    required String passAgain,
+  }) {
+    return _flatInvoke(
+      "register",
+      UserRegisterQuery(
+        host: host,
+        username: username,
+        nickname: nickname,
+        email: email,
+        sex: sex,
+        pass: pass,
+        passAgain: passAgain,
+      ),
+    );
+  }
+
+  Future<IsPro> isPro() async {
+    return IsPro.fromBuffer(await _flatInvoke(
+      "isPro",
+      Empty(),
+    ));
+  }
+
+  Future<IsPro> reloadPro() async {
+    return IsPro.fromBuffer(await _flatInvoke(
+      "reloadPro",
+      Empty(),
+    ));
+  }
+
+  Future inputCdKey(String k) {
+    return _flatInvoke("inputCdKey", Puff(value: k));
   }
 
   Future saveViewInfo(ComicInfoResult info) async {

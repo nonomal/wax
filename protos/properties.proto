@@ -91,3 +91,29 @@ message ComicSearchQuery  {
   int64 pageNumber = 3;
 }
 
+message UserRegisterQuery  {
+  string host = 1;
+  string username = 2;
+  string nickname = 3;
+  string email = 4;
+  string sex = 5;
+  string pass = 6;
+  string passAgain = 7;
+}
+
+message UserLoginQuery  {
+  string host = 1;
+  string username = 2;
+  string password = 3;
+}
+
+message IsPro  {
+  bool isPro = 1;
+  int64 expire = 2;
+}
+
+message Empty {}
+
+message Puff {
+  string value = 1;
+}
