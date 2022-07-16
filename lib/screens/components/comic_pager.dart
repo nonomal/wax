@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wax/basic/commons.dart';
+import 'package:wax/basic/methods.dart';
 import 'package:wax/protos/properties.pb.dart';
 
+import '../../configs/is_pro.dart';
 import '../../configs/pager_controller_mode.dart';
 import 'comic_list.dart';
 import 'content_builder.dart';
@@ -60,6 +63,8 @@ class _StreamPagerState extends State<_StreamPager> {
   var _joining = false;
   var _joinSuccess = true;
 
+  bool get _notPro => !isPro && _nextPage > 20;
+
   Future _join() async {
     try {
       setState(() {
@@ -83,6 +88,7 @@ class _StreamPagerState extends State<_StreamPager> {
   }
 
   final List<ComicSimple> _data = [];
+  List<ComicSimple>? _selected = null;
   late ScrollController _controller;
 
   @override
@@ -99,7 +105,7 @@ class _StreamPagerState extends State<_StreamPager> {
   }
 
   void _onScroll() {
-    if (_joining || _nextPage > _maxPage) {
+    if (_joining || _nextPage > _maxPage || _notPro) {
       return;
     }
     if (_controller.position.pixels + 100 >
@@ -109,6 +115,24 @@ class _StreamPagerState extends State<_StreamPager> {
   }
 
   Widget? _buildLoadingCard() {
+    if (_notPro) {
+      return Card(
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.only(top: 10, bottom: 10),
+              child: const CupertinoActivityIndicator(
+                radius: 14,
+              ),
+            ),
+            const Text(
+              '剩下的需要发电鸭',
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
+    }
     if (_joining) {
       return Card(
         child: Column(
@@ -155,6 +179,7 @@ class _StreamPagerState extends State<_StreamPager> {
             controller: _controller,
             onScroll: _onScroll,
             data: _data,
+            selected: _selected,
             append: _buildLoadingCard(),
           ),
         ),
@@ -207,8 +232,10 @@ class _PagerPagerState extends State<_PagerPager> {
   late int _maxPage = 1;
   late final List<ComicSimple> _data = [];
   late Future _pageFuture = _load();
+  List<ComicSimple>? _selected;
 
   Future<dynamic> _load() async {
+    _selected = null;
     var response = await widget.onPage(_currentPage);
     setState(() {
       _data.clear();
@@ -242,6 +269,7 @@ class _PagerPagerState extends State<_PagerPager> {
           appBar: _buildPagerBar(),
           body: ComicList(
             data: _data,
+            selected: _selected,
           ),
         );
       },
@@ -304,6 +332,10 @@ class _PagerPagerState extends State<_PagerPager> {
                               if (num == 0 || num > _maxPage) {
                                 return;
                               }
+                              if (_currentPage > 20) {
+                                defaultToast(context, "下一页需要发电鸭");
+                                return;
+                              }
                               setState(() {
                                 _currentPage = num;
                                 _pageFuture = _load();
@@ -322,6 +354,45 @@ class _PagerPagerState extends State<_PagerPager> {
                   ],
                 ),
               ),
+              Row(children: [
+                GestureDetector(
+                  onTap: () {
+                    if (_selected == null) {
+                      _selected = [];
+                      setState(() {});
+                    } else {
+                      _selected = null;
+                      setState(() {});
+                    }
+                  },
+                  child: const Text("选择"),
+                ),
+                const Text(
+                  " / ",
+                  style: TextStyle(color: Colors.grey),
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    if (_selected != null) {
+                      if (!isPro) {
+                        defaultToast(context, "发电才能批量下载");
+                        return;
+                      }
+                      await methods.pushToDownloads(_selected!);
+                      // todo 下载
+                      defaultToast(context, "已经加入下载队列");
+                      _selected = null;
+                      setState(() {});
+                    }
+                  },
+                  child: Text(
+                    "下载",
+                    style: TextStyle(
+                      color: _selected == null ? Colors.grey : null,
+                    ),
+                  ),
+                ),
+              ]),
               Row(
                 children: [
                   MaterialButton(
@@ -340,6 +411,10 @@ class _PagerPagerState extends State<_PagerPager> {
                     minWidth: 0,
                     onPressed: () {
                       if (_currentPage < _maxPage) {
+                        if (_currentPage >= 20) {
+                          defaultToast(context, "下一页需要发电鸭");
+                          return;
+                        }
                         setState(() {
                           _currentPage = _currentPage + 1;
                           _pageFuture = _load();

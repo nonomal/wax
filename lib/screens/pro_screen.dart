@@ -80,7 +80,8 @@ class _ProScreenState extends State<ProScreen> {
                             defaultToast(context, "$e");
                           } finally {
                             await reloadIsPro();
-                            _username = await methods.loadProperty(k: 'last_username');
+                            _username =
+                                await methods.loadProperty(k: 'last_username');
                             setState(() {});
                           }
                         }
@@ -129,6 +130,10 @@ class _ProScreenState extends State<ProScreen> {
           ListTile(
             title: const Text("我曾经发过电"),
             onTap: () async {
+              if (_username.isEmpty) {
+                defaultToast(context, "先登录");
+                return;
+              }
               try {
                 await methods.reloadPro();
                 defaultToast(context, "SUCCESS");
@@ -143,6 +148,10 @@ class _ProScreenState extends State<ProScreen> {
           ListTile(
             title: const Text("我刚才发了电"),
             onTap: () async {
+              if (_username.isEmpty) {
+                defaultToast(context, "先登录");
+                return;
+              }
               final code = await displayTextInputDialog(context, title: "输入代码");
               if (code != null && code.isNotEmpty) {
                 try {

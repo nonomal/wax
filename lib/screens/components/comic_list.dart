@@ -10,6 +10,7 @@ import 'comic_info_card.dart';
 class ComicList extends StatefulWidget {
   final bool inScroll;
   final List<ComicSimple> data;
+  final List<ComicSimple>? selected;
   final Widget? append;
   final ScrollController? controller;
   final Function? onScroll;
@@ -17,6 +18,7 @@ class ComicList extends StatefulWidget {
   const ComicList({
     Key? key,
     required this.data,
+    this.selected,
     this.append,
     this.controller,
     this.inScroll = false,
@@ -63,21 +65,50 @@ class _ComicListState extends State<ComicList> {
   Widget _buildCoverMode() {
     List<Widget> widgets = [];
     for (var i = 0; i < widget.data.length; i++) {
-      widgets.add(GestureDetector(
-        onTap: () {
-          _pushToComicInfo(widget.data[i]);
-        },
-        child: Card(
-          child: LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-              return ComicImage(
-                url: widget.data[i].cover,
-                width: constraints.maxWidth,
-                height: constraints.maxHeight,
-              );
-            },
-          ),
+      final card = Card(
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            return ComicImage(
+              url: widget.data[i].cover,
+              width: constraints.maxWidth,
+              height: constraints.maxHeight,
+            );
+          },
         ),
+      );
+      GestureTapCallback callback = widget.selected == null
+          ? () {
+              _pushToComicInfo(widget.data[i]);
+            }
+          : () {
+              if (widget.selected!.contains(widget.data[i])) {
+                widget.selected!.remove(widget.data[i]);
+              } else {
+                widget.selected!.add(widget.data[i]);
+              }
+              setState(() {});
+            };
+      widgets.add(GestureDetector(
+        onTap: callback,
+        child: Stack(children: [
+          card,
+          ...widget.selected == null
+              ? []
+              : [
+                  Row(children: [
+                    Expanded(child: Container()),
+                    Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: Icon(
+                        widget.selected!.contains(widget.data[i])
+                            ? Icons.check_circle_sharp
+                            : Icons.circle_outlined,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  ]),
+                ],
+        ]),
       ));
     }
     if (widget.append != null) {
@@ -119,11 +150,39 @@ class _ComicListState extends State<ComicList> {
   Widget _buildInfoMode() {
     List<Widget> widgets = [];
     for (var i = 0; i < widget.data.length; i++) {
+      GestureTapCallback callback = widget.selected == null
+          ? () {
+              _pushToComicInfo(widget.data[i]);
+            }
+          : () {
+              if (widget.selected!.contains(widget.data[i])) {
+                widget.selected!.remove(widget.data[i]);
+              } else {
+                widget.selected!.add(widget.data[i]);
+              }
+              setState(() {});
+            };
       widgets.add(GestureDetector(
-        onTap: () {
-          _pushToComicInfo(widget.data[i]);
-        },
-        child: ComicInfoCard(widget.data[i]),
+        onTap: callback,
+        child: Stack(children: [
+          ComicInfoCard(widget.data[i]),
+          ...widget.selected == null
+              ? []
+              : [
+                  Row(children: [
+                    Expanded(child: Container()),
+                    Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: Icon(
+                        widget.selected!.contains(widget.data[i])
+                            ? Icons.check_circle_sharp
+                            : Icons.circle_outlined,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  ]),
+                ],
+        ]),
       ));
     }
     if (widget.append != null) {
@@ -150,46 +209,74 @@ class _ComicListState extends State<ComicList> {
   Widget _buildTitleInCoverMode() {
     List<Widget> widgets = [];
     for (var i = 0; i < widget.data.length; i++) {
+      GestureTapCallback callback = widget.selected == null
+          ? () {
+              _pushToComicInfo(widget.data[i]);
+            }
+          : () {
+              if (widget.selected!.contains(widget.data[i])) {
+                widget.selected!.remove(widget.data[i]);
+              } else {
+                widget.selected!.add(widget.data[i]);
+              }
+              setState(() {});
+            };
       widgets.add(GestureDetector(
-        onTap: () {
-          _pushToComicInfo(widget.data[i]);
-        },
-        child: Card(
-          child: LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-              final Widget image = ComicImage(
-                url: widget.data[i].cover,
-                width: constraints.maxWidth,
-                height: constraints.maxHeight,
-              );
-              return Stack(
-                children: [
-                  image,
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      padding: const EdgeInsets.all(3),
-                      color: Colors.black.withAlpha(180),
-                      width: constraints.maxWidth,
-                      child: Text(
-                        "${widget.data[i].title}\n",
-                        maxLines: 2,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          height: 1.3,
-                        ),
-                        strutStyle: const StrutStyle(
-                          height: 1.3,
+        onTap: callback,
+        child: Stack(children: [
+          Card(
+            child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                final Widget image = ComicImage(
+                  url: widget.data[i].cover,
+                  width: constraints.maxWidth,
+                  height: constraints.maxHeight,
+                );
+                return Stack(
+                  children: [
+                    image,
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        padding: const EdgeInsets.all(3),
+                        color: Colors.black.withAlpha(180),
+                        width: constraints.maxWidth,
+                        child: Text(
+                          "${widget.data[i].title}\n",
+                          maxLines: 2,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            height: 1.3,
+                          ),
+                          strutStyle: const StrutStyle(
+                            height: 1.3,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              );
-            },
+                  ],
+                );
+              },
+            ),
           ),
-        ),
+          ...widget.selected == null
+              ? []
+              : [
+                  Row(children: [
+                    Expanded(child: Container()),
+                    Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: Icon(
+                        widget.selected!.contains(widget.data[i])
+                            ? Icons.check_circle_sharp
+                            : Icons.circle_outlined,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  ]),
+                ],
+        ]),
       ));
     }
     if (widget.append != null) {
@@ -234,46 +321,75 @@ class _ComicListState extends State<ComicList> {
     final double height = width * coverHeight / coverWidth;
     List<Widget> widgets = [];
     for (var i = 0; i < widget.data.length; i++) {
+      GestureTapCallback callback = widget.selected == null
+          ? () {
+              _pushToComicInfo(widget.data[i]);
+            }
+          : () {
+              if (widget.selected!.contains(widget.data[i])) {
+                widget.selected!.remove(widget.data[i]);
+              } else {
+                widget.selected!.add(widget.data[i]);
+              }
+              setState(() {});
+            };
       widgets.add(GestureDetector(
-        onTap: () {
-          _pushToComicInfo(widget.data[i]);
-        },
-        child: Column(
-          children: [
-            SizedBox(
-              width: width,
-              height: height,
-              child: Card(
-                child: LayoutBuilder(
-                  builder: (BuildContext context, BoxConstraints constraints) {
-                    late final Widget image = ComicImage(
-                      url: widget.data[i].cover,
-                      width: constraints.maxWidth,
-                      height: constraints.maxHeight,
-                    );
-                    return image;
-                  },
+        onTap: callback,
+        child: Stack(children: [
+          Column(
+            children: [
+              SizedBox(
+                width: width,
+                height: height,
+                child: Card(
+                  child: LayoutBuilder(
+                    builder:
+                        (BuildContext context, BoxConstraints constraints) {
+                      late final Widget image = ComicImage(
+                        url: widget.data[i].cover,
+                        width: constraints.maxWidth,
+                        height: constraints.maxHeight,
+                      );
+                      return image;
+                    },
+                  ),
                 ),
               ),
-            ),
-            Container(
-              width: width,
-              height: 50,
-              padding: const EdgeInsets.only(left: 5, right: 5, bottom: 10),
-              child: Text(
-                "${widget.data[i].title}\n",
-                maxLines: 2,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  height: 1.3,
-                ),
-                strutStyle: const StrutStyle(
-                  height: 1.3,
+              Container(
+                width: width,
+                height: 50,
+                padding: const EdgeInsets.only(left: 5, right: 5, bottom: 10),
+                child: Text(
+                  "${widget.data[i].title}\n",
+                  maxLines: 2,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    height: 1.3,
+                  ),
+                  strutStyle: const StrutStyle(
+                    height: 1.3,
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
+          ...widget.selected == null
+              ? []
+              : [
+                  Row(children: [
+                    Expanded(child: Container()),
+                    Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: Icon(
+                        widget.selected!.contains(widget.data[i])
+                            ? Icons.check_circle_sharp
+                            : Icons.circle_outlined,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  ]),
+                ],
+        ]),
       ));
     }
     if (widget.append != null) {

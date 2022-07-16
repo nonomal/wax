@@ -117,3 +117,8 @@ message Empty {}
 message Puff {
   string value = 1;
 }
+
+message PushToDownloads  {
+  string host = 1;
+  repeated ComicSimple comics = 2;
+}

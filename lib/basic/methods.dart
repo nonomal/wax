@@ -218,4 +218,13 @@ class Methods {
   Future updateViewLog($fixnum.Int64 id, int initRank) async {
     // todo
   }
+
+  Future pushToDownloads(List<ComicSimple> list) {
+    return _flatInvoke(
+        "pushToDownloads",
+        PushToDownloads(
+          host: host,
+          comics: list,
+        ));
+  }
 }
