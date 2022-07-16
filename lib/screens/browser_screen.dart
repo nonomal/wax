@@ -5,9 +5,11 @@ import 'package:flutter_search_bar/flutter_search_bar.dart';
 import 'package:wax/basic/methods.dart';
 import 'package:wax/configs/host.dart';
 import 'package:wax/protos/properties.pb.dart';
+import 'package:wax/screens/pro_screen.dart';
 import 'package:wax/screens/search_screen.dart';
 
 import '../basic/cates.dart';
+import '../configs/is_pro.dart';
 import 'components/actions.dart';
 import 'components/browser_bottom_sheet.dart';
 import 'components/comic_pager.dart';
@@ -25,6 +27,24 @@ class _BrowserScreenState extends State<BrowserScreen>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    hostEvent.subscribe(_setState);
+    proEvent.subscribe(_setState);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    hostEvent.unsubscribe(_setState);
+    proEvent.unsubscribe(_setState);
+    super.dispose();
+  }
+
+  _setState(_) {
+    setState(() {});
+  }
 
   late final SearchBar _searchBar = SearchBar(
     hintText: '搜索',
@@ -45,9 +65,10 @@ class _BrowserScreenState extends State<BrowserScreen>
         title: Text(_title()),
         actions: [
           ...alwaysInActions(),
-          const BrowserBottomSheetAction(),
+          proAction(),
           _searchBar.getSearchAction(context),
           chooseCateAction(context),
+          const BrowserBottomSheetAction(),
         ],
       );
     },
@@ -108,19 +129,17 @@ class _BrowserScreenState extends State<BrowserScreen>
     );
   }
 
-  @override
-  void initState() {
-    hostEvent.subscribe(_setState);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    hostEvent.unsubscribe(_setState);
-    super.dispose();
-  }
-
-  _setState(_) {
-    setState(() {});
+  Widget proAction() {
+    return IconButton(
+      onPressed: () {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (BuildContext context) {
+          return const ProScreen();
+        }));
+      },
+      icon: Icon(
+        isPro ? Icons.offline_bolt : Icons.offline_bolt_outlined,
+      ),
+    );
   }
 }

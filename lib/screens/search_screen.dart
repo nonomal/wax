@@ -42,8 +42,8 @@ class _SearchScreenState extends State<SearchScreen> {
         title: Text(widget.keyword),
         actions: [
           ...alwaysInActions(),
-          const BrowserBottomSheetAction(),
           _searchBar.getSearchAction(context),
+          const BrowserBottomSheetAction(),
         ],
       );
     },
