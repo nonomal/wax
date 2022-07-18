@@ -122,3 +122,62 @@ message PushToDownloads  {
   string host = 1;
   repeated ComicSimple comics = 2;
 }
+
+message ComicDownloadsRes {
+  repeated ComicDownloadDto downloads = 1;
+}
+
+message ComicDownloadDto {
+  string host = 1;
+  int64 id = 2;
+  string cover = 3;
+  string title = 4;
+  int64 status = 5;
+  bool coverDownload = 6;
+  bool fetchedInfo = 7;
+  bool fetchPage = 8;
+  int64 pageCount = 9;
+  int64 pageDown = 10;
+  bool deleting = 11;
+  string coverPath = 12;
+}
+
+message DownloadInfoQuery{
+  int64 id = 1;
+}
+
+message ComicDownloadInfoDto {
+  string host = 1;
+  int64 id = 2;
+  string cover = 3;
+  string title = 4;
+  int64 status = 5;
+  bool coverDownload = 6;
+  int64 pageCount = 7;
+  int64 pageDown = 8;
+  bool deleting = 9;
+  repeated string labels = 10;
+  repeated string tags = 11;
+  string description = 12;
+}
+
+message DownloadComicPages {
+  repeated DownloadComicPageDto pages = 1;
+}
+
+message DownloadComicPageDto {
+  int64 width = 1;
+  int64 height = 2;
+  string format = 3;
+  string path = 4;
+  string url = 5;
+  string caption = 6;
+}
+
+message IntValue {
+  int64 value = 1;
+}
+
+message BoolValue {
+  bool value = 1;
+}

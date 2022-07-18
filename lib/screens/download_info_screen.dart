@@ -1,97 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:wax/basic/methods.dart';
-import 'package:wax/protos/properties.pb.dart';
-
-import '../basic/commons.dart';
+import '../basic/methods.dart';
+import '../protos/properties.pb.dart';
 import 'browser_screen.dart';
 import 'comic_reader_screen.dart';
-import 'components/actions.dart';
 import 'components/content_builder.dart';
 import 'components/images.dart';
 
-class ComicInfoScreen extends StatefulWidget {
-  final ComicSimple comicSimple;
+class DownloadInfoScreen extends StatefulWidget {
+  final ComicDownloadDto e;
 
-  const ComicInfoScreen(this.comicSimple, {Key? key}) : super(key: key);
+  const DownloadInfoScreen(this.e, {Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _ComicInfoScreenState();
+  State<StatefulWidget> createState() => _DownloadInfoScreenState();
 }
 
-class _ComicInfoScreenState extends State<ComicInfoScreen> {
-  late Future<ComicInfoResult> _future;
-  late Future<bool> _hasDownloadFuture;
-
-  Future<ComicInfoResult> _loadComic() async {
-    var info = await methods.comicInfo(widget.comicSimple.id);
-    var _ = methods.saveViewInfo(info); // 在后台线程保存浏览记录
-    return info;
-  }
-
-  @override
-  void initState() {
-    _future = _loadComic();
-    _hasDownloadFuture = methods.hasDownload(widget.comicSimple.id);
-    super.initState();
-  }
+class _DownloadInfoScreenState extends State<DownloadInfoScreen> {
+  late final Future<ComicDownloadInfoDto> _future =
+      methods.downloadInfo(widget.e.id);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.comicSimple.title),
-        actions: [
-          FutureBuilder(
-            future: _future,
-            builder: (BuildContext context,
-                AsyncSnapshot<ComicInfoResult> snapshot1) {
-              if (snapshot1.hasError ||
-                  snapshot1.connectionState != ConnectionState.done) {
-                return Container();
-              }
-              return FutureBuilder(
-                future: _hasDownloadFuture,
-                builder: (BuildContext context, AsyncSnapshot<bool> snapshot2) {
-                  if (snapshot2.hasError ||
-                      snapshot2.connectionState != ConnectionState.done) {
-                    return Container();
-                  }
-                  if (snapshot2.requireData) {
-                    // todo downloading
-                    return IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.download_done),
-                    );
-                  } else {
-                    return IconButton(
-                      onPressed: () async {
-                        var confirm =
-                            await confirmDialog(context, "下载", "下载这个漫画吗？");
-                        if (confirm) {
-                          await methods.pushToDownloads([
-                            widget.comicSimple,
-                          ]);
-                          setState(() {
-                            _hasDownloadFuture =
-                                methods.hasDownload(widget.comicSimple.id);
-                          });
-                          defaultToast(context, "已加入下载队列");
-                        }
-                      },
-                      icon: const Icon(Icons.download),
-                    );
-                  }
-                },
-              );
-            },
-          ),
-          ...alwaysInActions(),
-        ],
+        title: Text(widget.e.title),
       ),
       floatingActionButton: FutureBuilder(
         future: _future,
-        builder:
-            (BuildContext context, AsyncSnapshot<ComicInfoResult> snapshot) {
+        builder: (BuildContext context,
+            AsyncSnapshot<ComicDownloadInfoDto> snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               !snapshot.hasError) {
             return Padding(
@@ -101,9 +38,21 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> {
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (BuildContext context) {
                     return ComicReaderScreen(
-                      comic: widget.comicSimple,
-                      loadResult: () {
-                        return methods.comicPages(widget.comicSimple.id);
+                      comic: ComicSimple(
+                        id: widget.e.id,
+                        cover: widget.e.cover,
+                        title: widget.e.title,
+                      ),
+                      loadResult: () async {
+                        var pages =
+                            (await methods.downloadPages(widget.e.id)).pages;
+                        var pagesRsp = ComicPagesResult(
+                          pages: pages.map((e) => ComicPage(
+                                caption: e.caption,
+                                url: e.url,
+                              )),
+                        );
+                        return pagesRsp;
                       },
                     );
                   }));
@@ -118,12 +67,10 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> {
       body: ContentBuilder(
         future: _future,
         onRefresh: () async {
-          setState(() {
-            _future = _loadComic();
-          });
+          setState(() {});
         },
-        successBuilder:
-            (BuildContext context, AsyncSnapshot<ComicInfoResult> snapshot) {
+        successBuilder: (BuildContext context,
+            AsyncSnapshot<ComicDownloadInfoDto> snapshot) {
           var item = snapshot.data!;
           var mq = MediaQuery.of(context);
           var imageWidth =
@@ -138,12 +85,13 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> {
               Container(height: 20),
               Align(
                 alignment: Alignment.center,
+                // todo, offline
                 child: SizedBox(
                   width: imageWidth,
                   child: ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(4.0)),
                     child: HorizontalStretchComicImage(
-                      url: widget.comicSimple.cover,
+                      url: widget.e.cover,
                       originSize: Size(
                         coverWidth.toDouble(),
                         coverHeight.toDouble(),
@@ -156,7 +104,7 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> {
               Container(
                 margin: const EdgeInsets.only(left: 20, right: 20),
                 child: Text(
-                  widget.comicSimple.title,
+                  widget.e.title,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: 18,
@@ -189,7 +137,7 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> {
               Container(
                 margin: const EdgeInsets.only(left: 20, right: 20),
                 child: Wrap(
-                  children: (item.comicInfo.tags.map(_buildTag)).toList(),
+                  children: (item.tags.map(_buildTag)).toList(),
                 ),
               ),
             ],

@@ -207,12 +207,12 @@ class Methods {
   }
 
   Future<bool> hasDownload($fixnum.Int64 comicId) async {
-    // todo
-    return false;
-  }
-
-  Future downloadComic($fixnum.Int64 id) async {
-    // todo
+    return BoolValue.fromBuffer(await _flatInvoke(
+      "hasDownload",
+      DownloadInfoQuery(
+        id: comicId,
+      ),
+    )).value;
   }
 
   Future updateViewLog($fixnum.Int64 id, int initRank) async {
@@ -221,10 +221,61 @@ class Methods {
 
   Future pushToDownloads(List<ComicSimple> list) {
     return _flatInvoke(
-        "pushToDownloads",
-        PushToDownloads(
-          host: host,
-          comics: list,
-        ));
+      "pushToDownloads",
+      PushToDownloads(
+        host: host,
+        comics: list,
+      ),
+    );
+  }
+
+  Future<ComicDownloadsRes> downloads() async {
+    return ComicDownloadsRes.fromBuffer(await _flatInvoke(
+      "downloads",
+      Empty(),
+    ));
+  }
+
+  Future<ComicDownloadInfoDto> downloadInfo($fixnum.Int64 id) async {
+    return ComicDownloadInfoDto.fromBuffer(await _flatInvoke(
+      "downloadInfo",
+      DownloadInfoQuery(
+        id: id,
+      ),
+    ));
+  }
+
+  Future<DownloadComicPages> downloadPages($fixnum.Int64 id) async {
+    return DownloadComicPages.fromBuffer(await _flatInvoke(
+      "downloadPages",
+      DownloadInfoQuery(
+        id: id,
+      ),
+    ));
+  }
+
+  Future resetDownload() {
+    return _flatInvoke(
+      "resetDownload",
+      Empty(),
+    );
+  }
+
+  Future setDownloadThread(int count) {
+    return _flatInvoke(
+      "setDownloadThread",
+      IntValue(
+        value: $fixnum.Int64.fromInts(0, count),
+      ),
+    );
+  }
+
+  Future<int> getDownloadThread() async {
+    return IntValue.fromBuffer(await _flatInvoke(
+      "getDownloadThread",
+      Empty(),
+    ))
+        .value
+        .toInt();
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter_search_bar/flutter_search_bar.dart';
 import 'package:wax/basic/methods.dart';
 import 'package:wax/configs/host.dart';
 import 'package:wax/protos/properties.pb.dart';
+import 'package:wax/screens/downloads_screen.dart';
 import 'package:wax/screens/pro_screen.dart';
 import 'package:wax/screens/search_screen.dart';
 
@@ -65,6 +66,15 @@ class _BrowserScreenState extends State<BrowserScreen>
         title: Text(_title()),
         actions: [
           ...alwaysInActions(),
+          IconButton(
+            onPressed: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (BuildContext context) {
+                return const DownloadsScreen();
+              }));
+            },
+            icon: const Icon(Icons.download),
+          ),
           proAction(),
           _searchBar.getSearchAction(context),
           chooseCateAction(context),
