@@ -144,6 +144,7 @@ jobs:
         with:
           channel: ${{ env.flutter_channel }}
           flutter-version: ${{ env.flutter_version }}
+          architecture: x64
 
       - name: Install Protoc
         if: steps.check_asset.outputs.skip_build != 'true'
@@ -155,7 +156,7 @@ jobs:
         if: steps.check_asset.outputs.skip_build != 'true'
         run: |
           go install github.com/golang/protobuf/protoc-gen-go@latest
-          arch -x86_64 dart pub global activate protoc_plugin
+          dart pub global activate protoc_plugin
 
       - name: dart-protoc path (non-windows)
         if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.target != 'windows'
@@ -176,7 +177,7 @@ jobs:
       - name: Gen proto class
         if: steps.check_asset.outputs.skip_build != 'true'
         run: |
-          arch -x86_64 protoc --dart_out=lib/ --go_out=go/ protos/*.proto
+          protoc --dart_out=lib/ --go_out=go/ protos/*.proto
 
       - name: pub upgrade
         if: steps.check_asset.outputs.skip_build != 'true'
