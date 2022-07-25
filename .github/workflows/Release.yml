@@ -155,7 +155,7 @@ jobs:
         if: steps.check_asset.outputs.skip_build != 'true'
         run: |
           go install github.com/golang/protobuf/protoc-gen-go@latest
-          dart pub global activate protoc_plugin
+          arch -x86_64 dart pub global activate protoc_plugin
 
       - name: dart-protoc path (non-windows)
         if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.target != 'windows'
@@ -176,7 +176,7 @@ jobs:
       - name: Gen proto class
         if: steps.check_asset.outputs.skip_build != 'true'
         run: |
-          protoc --dart_out=lib/ --go_out=go/ protos/*.proto
+          arch -x86_64 protoc --dart_out=lib/ --go_out=go/ protos/*.proto
 
       - name: pub upgrade
         if: steps.check_asset.outputs.skip_build != 'true'
