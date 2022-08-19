@@ -208,6 +208,43 @@ class _StreamPagerState extends State<_StreamPager> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text("已加载 ${_nextPage - 1} / $_maxPage 页"),
+              Expanded(child: Container()),
+              GestureDetector(
+                onTap: () {
+                  if (_selected == null) {
+                    _selected = [];
+                    setState(() {});
+                  } else {
+                    _selected = null;
+                    setState(() {});
+                  }
+                },
+                child: const Text("选择"),
+              ),
+              const Text(
+                " / ",
+                style: TextStyle(color: Colors.grey),
+              ),
+              GestureDetector(
+                onTap: () async {
+                  if (_selected != null) {
+                    if (!isPro) {
+                      defaultToast(context, "发电才能批量下载");
+                      return;
+                    }
+                    await methods.pushToDownloads(_selected!);
+                    defaultToast(context, "已经加入下载队列");
+                    _selected = null;
+                    setState(() {});
+                  }
+                },
+                child: Text(
+                  "下载",
+                  style: TextStyle(
+                    color: _selected == null ? Colors.grey : null,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -379,7 +416,6 @@ class _PagerPagerState extends State<_PagerPager> {
                         return;
                       }
                       await methods.pushToDownloads(_selected!);
-                      // todo 下载
                       defaultToast(context, "已经加入下载队列");
                       _selected = null;
                       setState(() {});

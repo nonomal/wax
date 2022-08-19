@@ -278,4 +278,13 @@ class Methods {
         .value
         .toInt();
   }
+
+  Future deleteDownloadById($fixnum.Int64 comicId) {
+    return _flatInvoke(
+      "deleteDownloadById",
+      IntValue(
+        value: comicId,
+      ),
+    );
+  }
 }

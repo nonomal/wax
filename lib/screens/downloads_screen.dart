@@ -81,6 +81,20 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
           }));
         }
       },
+      onLongPress: () async {
+        String? result = await chooseListDialog<String>(
+          context,
+          title: "删除漫画 ${e.title}?",
+          values: ["是", "否"],
+        );
+        if (result == "是") {
+          await methods.deleteDownloadById(e.id);
+          setState(() {
+            _future = methods.downloads();
+            _key = UniqueKey();
+          });
+        }
+      },
       child: DownloadInfoCard(e),
     );
   }
