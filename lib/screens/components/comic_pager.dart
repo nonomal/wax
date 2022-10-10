@@ -369,7 +369,7 @@ class _PagerPagerState extends State<_PagerPager> {
                               if (num == 0 || num > _maxPage) {
                                 return;
                               }
-                              if (_currentPage > 20) {
+                              if (num > 20 && !isPro) {
                                 defaultToast(context, "下一页需要发电鸭");
                                 return;
                               }
