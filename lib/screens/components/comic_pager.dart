@@ -447,12 +447,13 @@ class _PagerPagerState extends State<_PagerPager> {
                     minWidth: 0,
                     onPressed: () {
                       if (_currentPage < _maxPage) {
-                        if (_currentPage >= 20) {
+                        var num = _currentPage + 1;
+                        if (num > 20 && !isPro) {
                           defaultToast(context, "下一页需要发电鸭");
                           return;
                         }
                         setState(() {
-                          _currentPage = _currentPage + 1;
+                          _currentPage = num;
                           _pageFuture = _load();
                         });
                       }
