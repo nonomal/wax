@@ -88,114 +88,198 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> {
           ...alwaysInActions(),
         ],
       ),
-      floatingActionButton: FutureBuilder(
-        future: _future,
-        builder:
-            (BuildContext context, AsyncSnapshot<ComicInfoResult> snapshot) {
-          if (snapshot.connectionState == ConnectionState.done &&
-              !snapshot.hasError) {
-            return Padding(
-              padding: const EdgeInsets.only(right: 30, bottom: 30),
-              child: FloatingActionButton(
-                onPressed: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (BuildContext context) {
-                    return ComicReaderScreen(
-                      comic: widget.comicSimple,
-                      loadResult: () {
-                        return methods.comicPages(widget.comicSimple.id);
-                      },
-                    );
-                  }));
-                },
-                child: const Icon(Icons.menu_book),
+      body: Stack(
+        children: [
+          _body(),
+          SafeArea(
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  right: 30,
+                  bottom: 30,
+                ),
+                child: _readButton(),
               ),
-            );
-          }
-          return Container();
-        },
+            ),
+          ),
+          SafeArea(
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: 30,
+                  bottom: 30,
+                ),
+                child: _favouriteButton(),
+              ),
+            ),
+          ),
+        ],
       ),
-      body: ContentBuilder(
-        future: _future,
-        onRefresh: () async {
-          setState(() {
-            _future = _loadComic();
-          });
-        },
-        successBuilder:
-            (BuildContext context, AsyncSnapshot<ComicInfoResult> snapshot) {
-          var item = snapshot.data!;
-          var mq = MediaQuery.of(context);
-          var imageWidth =
-              (mq.size.width < mq.size.height) ? mq.size.width : mq.size.height;
-          imageWidth = imageWidth / 2;
-          var subColor = Color.alphaBlend(
-            Colors.grey.shade500.withAlpha(80),
-            (Theme.of(context).textTheme.bodyText1?.color ?? Colors.black),
-          );
-          return ListView(
-            children: [
-              Container(height: 20),
-              Align(
-                alignment: Alignment.center,
-                child: SizedBox(
-                  width: imageWidth,
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-                    child: HorizontalStretchComicImage(
-                      url: widget.comicSimple.cover,
-                      originSize: Size(
-                        coverWidth.toDouble(),
-                        coverHeight.toDouble(),
-                      ),
+    );
+  }
+
+  Widget _body() {
+    return ContentBuilder(
+      future: _future,
+      onRefresh: () async {
+        setState(() {
+          _future = _loadComic();
+        });
+      },
+      successBuilder:
+          (BuildContext context, AsyncSnapshot<ComicInfoResult> snapshot) {
+        var item = snapshot.data!;
+        var mq = MediaQuery.of(context);
+        var imageWidth =
+            (mq.size.width < mq.size.height) ? mq.size.width : mq.size.height;
+        imageWidth = imageWidth / 2;
+        var subColor = Color.alphaBlend(
+          Colors.grey.shade500.withAlpha(80),
+          (Theme.of(context).textTheme.bodyText1?.color ?? Colors.black),
+        );
+        return ListView(
+          children: [
+            Container(height: 20),
+            Align(
+              alignment: Alignment.center,
+              child: SizedBox(
+                width: imageWidth,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+                  child: HorizontalStretchComicImage(
+                    url: widget.comicSimple.cover,
+                    originSize: Size(
+                      coverWidth.toDouble(),
+                      coverHeight.toDouble(),
                     ),
                   ),
                 ),
               ),
-              Container(height: 20),
-              Container(
-                margin: const EdgeInsets.only(left: 20, right: 20),
-                child: Text(
-                  widget.comicSimple.title,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+            ),
+            Container(height: 20),
+            Container(
+              margin: const EdgeInsets.only(left: 20, right: 20),
+              child: Text(
+                widget.comicSimple.title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              Container(height: 10),
-              Align(
-                alignment: Alignment.center,
-                child: Text.rich(TextSpan(
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: subColor,
-                  ),
-                  children: [
-                    WidgetSpan(
-                      child: Icon(
-                        Icons.calendar_today_outlined,
-                        size: 12,
-                        color: subColor,
-                      ),
+            ),
+            Container(height: 10),
+            Align(
+              alignment: Alignment.center,
+              child: Text.rich(TextSpan(
+                style: TextStyle(
+                  fontSize: 12,
+                  color: subColor,
+                ),
+                children: [
+                  WidgetSpan(
+                    child: Icon(
+                      Icons.calendar_today_outlined,
+                      size: 12,
+                      color: subColor,
                     ),
-                    const TextSpan(text: " "),
-                    const TextSpan(text: "  "),
-                  ],
-                )),
+                  ),
+                  const TextSpan(text: " "),
+                  const TextSpan(text: "  "),
+                ],
+              )),
+            ),
+            Container(height: 10),
+            Container(
+              margin: const EdgeInsets.only(left: 20, right: 20),
+              child: Wrap(
+                children: (item.comicInfo.tags.map(_buildTag)).toList(),
               ),
-              Container(height: 10),
-              Container(
-                margin: const EdgeInsets.only(left: 20, right: 20),
-                child: Wrap(
-                  children: (item.comicInfo.tags.map(_buildTag)).toList(),
-                ),
-              ),
-            ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _readButton() {
+    return FutureBuilder(
+      future: _future,
+      builder: (BuildContext context, AsyncSnapshot<ComicInfoResult> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            !snapshot.hasError) {
+          return FloatingActionButton(
+            onPressed: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (BuildContext context) {
+                return ComicReaderScreen(
+                  comic: widget.comicSimple,
+                  loadResult: () {
+                    return methods.comicPages(widget.comicSimple.id);
+                  },
+                );
+              }));
+            },
+            child: const Icon(Icons.menu_book),
           );
-        },
-      ),
+        }
+        return Container();
+      },
+    );
+  }
+
+  Widget _favouriteButton() {
+    return FutureBuilder(
+      future: _future,
+      builder: (BuildContext context, AsyncSnapshot<ComicInfoResult> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            !snapshot.hasError) {
+          return FloatingActionButton(
+            onPressed: () {
+              () async {
+                try {
+                  // 获取所有收藏夹的名字
+                  var result = await methods.favoritesPartitions();
+                  // 找到默认分类
+                  FavoritesPartitionDto? dto;
+                  for (var value in result.partitionList) {
+                    if (value.name == "默认分类") {
+                      dto = value;
+                      break;
+                    }
+                  }
+                  // 如果没有则新建, 并且再次获取
+                  if (dto == null) {
+                    await methods.createFavoritesPartition("默认分类");
+                  }
+                  result = await methods.favoritesPartitions();
+                  for (var value in result.partitionList) {
+                    if (value.name == "默认分类") {
+                      dto = value;
+                      break;
+                    }
+                  }
+                  final dtoFinal = dto!;
+                  // 加入默认分类收藏夹
+                  await methods.favoriteComic(
+                    widget.comicSimple.id,
+                    dtoFinal.id,
+                  );
+                  //
+                  defaultToast(context, "收藏成功");
+                } catch (e) {
+                  print("$e");
+                  defaultToast(context, "收藏失败");
+                }
+              }();
+            },
+            child: const Icon(Icons.favorite),
+          );
+        }
+        return Container();
+      },
     );
   }
 

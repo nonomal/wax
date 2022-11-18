@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:wax/basic/methods.dart';
 import 'package:wax/protos/properties.pb.dart';
 import 'package:wax/screens/components/images.dart';
+import '../../basic/commons.dart';
 import '../../configs/pager_column_number.dart';
 import '../../configs/pager_view_mode.dart';
-
+import 'package:fixnum/fixnum.dart' as $fixnum;
 import '../comic_info_screen.dart';
 import 'comic_info_card.dart';
 
@@ -72,6 +74,14 @@ class _ComicListState extends State<ComicList> {
               url: widget.data[i].cover,
               width: constraints.maxWidth,
               height: constraints.maxHeight,
+              addLongPressMenus: widget.data[i].favouriteId > 0
+                  ? [
+                      TextMenu(
+                        "删除收藏",
+                        deleteAction(widget.data[i]),
+                      ),
+                    ]
+                  : null,
             );
           },
         ),
@@ -89,6 +99,7 @@ class _ComicListState extends State<ComicList> {
               setState(() {});
             };
       widgets.add(GestureDetector(
+        onLongPress: _buildDeleteDialog(widget.data[i]),
         onTap: callback,
         child: Stack(children: [
           card,
@@ -423,5 +434,43 @@ class _ComicListState extends State<ComicList> {
     Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
       return ComicInfoScreen(data);
     }));
+  }
+
+  GestureLongPressCallback? _buildDeleteDialog(ComicSimple data) {
+    if (data.favouriteId > 0) {
+      return () {
+        () async {
+          final choose = await chooseListDialog(
+            context,
+            title: "操作",
+            values: ["删除收藏", "取消"],
+          );
+          if (choose != null && choose == "删除收藏") {
+            try {
+              await methods.deleteFavourite(data.favouriteId);
+              data.favouriteId = $fixnum.Int64.fromInts(0, 0);
+              defaultToast(context, "删除成功, 刷新页面之后会消失");
+            } catch (e) {
+              defaultToast(context, "删除失败: $e");
+            }
+          }
+        }();
+      };
+    }
+    return null;
+  }
+
+  void Function() deleteAction(ComicSimple data) {
+    return () {
+      () async {
+        try {
+          await methods.deleteFavourite(data.favouriteId);
+          data.favouriteId = $fixnum.Int64.fromInts(0, 0);
+          defaultToast(context, "删除成功, 刷新页面之后会消失");
+        } catch (e) {
+          defaultToast(context, "删除失败: $e");
+        }
+      }();
+    };
   }
 }

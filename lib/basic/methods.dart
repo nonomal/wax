@@ -4,10 +4,8 @@ import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:fixnum/fixnum.dart' as $fixnum;
-import 'package:url_launcher/url_launcher.dart';
 import 'package:wax/configs/host.dart';
 import 'package:wax/protos/properties.pb.dart';
 
@@ -212,7 +210,8 @@ class Methods {
       DownloadInfoQuery(
         id: comicId,
       ),
-    )).value;
+    ))
+        .value;
   }
 
   Future updateViewLog($fixnum.Int64 id, int initRank) async {
@@ -284,6 +283,69 @@ class Methods {
       "deleteDownloadById",
       IntValue(
         value: comicId,
+      ),
+    );
+  }
+
+  Future<LoginUser> loginUser() async {
+    final buff = await _flatInvoke(
+        "loginUser",
+        LoginUserQuery(
+          host: host,
+        ));
+    return LoginUser.fromBuffer(buff);
+  }
+
+  Future<FetchComicResult> favoriteList(int partitionId, int page) async {
+    final buff = await _flatInvoke(
+        "favoriteList",
+        FavoriteListQuery(
+          host: host,
+          partitionId: $fixnum.Int64.fromInts(0, partitionId),
+          page: $fixnum.Int64.fromInts(0, page),
+        ));
+    return FetchComicResult.fromBuffer(buff);
+  }
+
+  Future deleteFavourite($fixnum.Int64 favouriteId) async {
+    return _flatInvoke(
+      "deleteFavourite",
+      DeleteFavoriteQuery(
+        host: host,
+        favouriteId: favouriteId,
+      ),
+    );
+  }
+
+  Future<FavoritesPartitionResult> favoritesPartitions() async {
+    final buff = await _flatInvoke(
+        "favoritesPartitions",
+        FavoritesPartitionsQuery(
+          host: host,
+        ));
+    return FavoritesPartitionResult.fromBuffer(buff);
+  }
+
+  Future createFavoritesPartition(String name) async {
+    return _flatInvoke(
+      "createFavoritesPartition",
+      CreateFavoritesPartitionQuery(
+        host: host,
+        name: name,
+      ),
+    );
+  }
+
+  Future favoriteComic(
+    $fixnum.Int64? comicId,
+    $fixnum.Int64? partitionId,
+  ) async {
+    return _flatInvoke(
+      "favoriteComic",
+      FavoriteComicQuery(
+        host: host,
+        comicId: comicId,
+        partitionId: partitionId,
       ),
     );
   }

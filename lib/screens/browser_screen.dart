@@ -6,11 +6,13 @@ import 'package:wax/basic/methods.dart';
 import 'package:wax/configs/host.dart';
 import 'package:wax/protos/properties.pb.dart';
 import 'package:wax/screens/downloads_screen.dart';
+import 'package:wax/screens/favourite_screen.dart';
 import 'package:wax/screens/pro_screen.dart';
 import 'package:wax/screens/search_screen.dart';
 
 import '../basic/cates.dart';
 import '../configs/is_pro.dart';
+import '../configs/versions.dart';
 import 'components/actions.dart';
 import 'components/browser_bottom_sheet.dart';
 import 'components/comic_pager.dart';
@@ -33,6 +35,10 @@ class _BrowserScreenState extends State<BrowserScreen>
   void initState() {
     hostEvent.subscribe(_setState);
     proEvent.subscribe(_setState);
+    Future.delayed(Duration.zero, () async {
+      versionPop(context);
+      versionEvent.subscribe(_versionSub);
+    });
     super.initState();
   }
 
@@ -45,6 +51,10 @@ class _BrowserScreenState extends State<BrowserScreen>
 
   _setState(_) {
     setState(() {});
+  }
+
+  _versionSub(_) {
+    versionPop(context);
   }
 
   late final SearchBar _searchBar = SearchBar(
@@ -75,6 +85,7 @@ class _BrowserScreenState extends State<BrowserScreen>
             },
             icon: const Icon(Icons.download),
           ),
+          favAction(),
           proAction(),
           _searchBar.getSearchAction(context),
           chooseCateAction(context),
@@ -150,6 +161,18 @@ class _BrowserScreenState extends State<BrowserScreen>
       icon: Icon(
         isPro ? Icons.offline_bolt : Icons.offline_bolt_outlined,
       ),
+    );
+  }
+
+  Widget favAction() {
+    return IconButton(
+      onPressed: () {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (BuildContext context) {
+          return const FavouriteScreen();
+        }));
+      },
+      icon: const Icon(Icons.favorite),
     );
   }
 }

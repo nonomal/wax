@@ -61,12 +61,14 @@ class ComicImage extends StatefulWidget {
   final double? width;
   final double? height;
   final Function(Size size)? onTrueSize;
+  final List<TextMenu>? addLongPressMenus;
 
   const ComicImage({
     required this.url,
     this.width,
     this.height,
     this.onTrueSize,
+    this.addLongPressMenus,
     Key? key,
   }) : super(key: key);
 
@@ -93,12 +95,22 @@ class _ComicImageState extends State<ComicImage> {
 
   @override
   Widget build(BuildContext context) {
-    return pathFutureImage(_future, widget.width, widget.height);
+    return pathFutureImage(_future, widget.width, widget.height,
+        addLongPressMenus: widget.addLongPressMenus);
   }
 }
 
+class TextMenu {
+  final String text;
+  final void Function() action;
+
+  TextMenu(this.text, this.action);
+}
+
 Widget pathFutureImage(Future<String> future, double? width, double? height,
-    {BoxFit fit = BoxFit.cover, BuildContext? context}) {
+    {BoxFit fit = BoxFit.cover,
+    BuildContext? context,
+    List<TextMenu>? addLongPressMenus}) {
   return FutureBuilder(
       future: future,
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
@@ -116,6 +128,7 @@ Widget pathFutureImage(Future<String> future, double? width, double? height,
           height,
           fit: fit,
           context: context,
+          addLongPressMenus: addLongPressMenus,
         );
       });
 }
@@ -184,7 +197,9 @@ Widget buildLoading(double? width, double? height) {
 }
 
 Widget buildFile(String file, double? width, double? height,
-    {BoxFit fit = BoxFit.cover, BuildContext? context}) {
+    {BoxFit fit = BoxFit.cover,
+    BuildContext? context,
+    List<TextMenu>? addLongPressMenus}) {
   var image = Image(
     image: FileImage(File(file)),
     width: width,
@@ -199,20 +214,37 @@ Widget buildFile(String file, double? width, double? height,
   if (context == null) return image;
   return GestureDetector(
     onLongPress: () async {
+      var chooseList = ['预览图片', '保存图片'];
+      if (addLongPressMenus != null) {
+        for (var value in addLongPressMenus) {
+          chooseList.add(value.text);
+        }
+      }
       String? choose = await chooseListDialog(
         context,
         title: '请选择',
-        values: ['预览图片', '保存图片'],
+        values: chooseList,
       );
+      if (choose == null) {
+        return;
+      }
       switch (choose) {
         case '预览图片':
           Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => FilePhotoViewScreen(file),
           ));
-          break;
+          return;
         case '保存图片':
           saveImageFileToGallery(context, file);
-          break;
+          return;
+      }
+      if (addLongPressMenus != null) {
+        for (var value in addLongPressMenus) {
+          if (value.text == choose) {
+            value.action();
+            return;
+          }
+        }
       }
     },
     child: image,

@@ -32,6 +32,7 @@ message ComicSimple  {
   int64 id = 1;
   string cover = 2;
   string title = 3;
+  int64 favouriteId = 4;
 }
 
 message ComicInfoQuery  {
@@ -180,4 +181,53 @@ message IntValue {
 
 message BoolValue {
   bool value = 1;
+}
+
+message CreateFavoritesPartitionQuery {
+  string host = 1;
+  string name = 2;
+}
+
+message FavoritesPartitionsQuery {
+  string host = 1;
+}
+
+message FavoritesPartitionResult {
+  repeated FavoritesPartitionDto partitionList = 1;
+}
+
+message FavoritesPartitionDto {
+  int64 id = 1;
+  string name = 2;
+}
+
+message RenameFavoritesPartitionQuery {
+  string host = 1;
+  int64 id = 2;
+  string name = 3;
+}
+
+message FavoriteComicQuery {
+  string host = 1;
+  int64 comicId = 2;
+  int64 partitionId = 3;
+}
+
+message FavoriteListQuery {
+  string host = 1;
+  int64 partitionId = 2;
+  int64 page = 3;
+}
+
+message LoginUserQuery {
+  string host = 1;
+}
+
+message LoginUser {
+  string nicename = 1;
+}
+
+message DeleteFavoriteQuery {
+  string host = 1;
+  int64 favouriteId = 2;
 }

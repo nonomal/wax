@@ -9,6 +9,7 @@ import '../configs/android_display_mode.dart';
 import '../configs/android_version.dart';
 import '../configs/auto_clean.dart';
 import '../configs/download_thread_count.dart';
+import '../configs/login_state.dart';
 import '../configs/reader_controller_type.dart';
 import '../configs/reader_direction.dart';
 import '../configs/reader_slider_position.dart';
@@ -44,6 +45,7 @@ class _InitScreenState extends State<InitScreen> {
     await reloadIsPro();
     await initDownloadThreadCount();
     autoCheckNewVersion();
+    await initLogin();
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (BuildContext context) => const AppScreen()),
     );

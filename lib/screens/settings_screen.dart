@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wax/configs/themes.dart';
 import 'package:wax/configs/versions.dart';
 
+import '../configs/login_state.dart';
 import '../configs/volume_controller.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -17,6 +18,8 @@ class SettingsScreen extends StatelessWidget {
         children: [
           const Divider(),
           const VersionInfo(),
+          const Divider(),
+          const LoginStateSetting(),
           const Divider(),
           lightThemeSetting(),
           darkThemeSetting(),
