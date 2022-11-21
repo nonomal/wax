@@ -64,7 +64,7 @@ func main() {
 		releaseFileName = fmt.Sprintf("wax-%v-android-x86_64.apk", version.Code)
 	}
 	if strings.HasPrefix(flutterVersion, "2") {
-		releaseFileName = "old_flutter-" + releaseFileName
+		releaseFileName = "z-old_flutter-" + releaseFileName
 	}
 	// get version
 	getReleaseRequest, err := http.NewRequest(

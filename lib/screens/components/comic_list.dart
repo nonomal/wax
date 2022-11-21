@@ -74,14 +74,7 @@ class _ComicListState extends State<ComicList> {
               url: widget.data[i].cover,
               width: constraints.maxWidth,
               height: constraints.maxHeight,
-              addLongPressMenus: widget.data[i].favouriteId > 0
-                  ? [
-                      TextMenu(
-                        "删除收藏",
-                        deleteAction(widget.data[i]),
-                      ),
-                    ]
-                  : null,
+              addLongPressMenus: _buildDeleteMenu(widget.data[i]),
             );
           },
         ),
@@ -174,6 +167,7 @@ class _ComicListState extends State<ComicList> {
               setState(() {});
             };
       widgets.add(GestureDetector(
+        onLongPress: _buildDeleteDialog(widget.data[i]),
         onTap: callback,
         child: Stack(children: [
           ComicInfoCard(widget.data[i]),
@@ -233,6 +227,7 @@ class _ComicListState extends State<ComicList> {
               setState(() {});
             };
       widgets.add(GestureDetector(
+        onLongPress: _buildDeleteDialog(widget.data[i]),
         onTap: callback,
         child: Stack(children: [
           Card(
@@ -242,6 +237,7 @@ class _ComicListState extends State<ComicList> {
                   url: widget.data[i].cover,
                   width: constraints.maxWidth,
                   height: constraints.maxHeight,
+                  addLongPressMenus: _buildDeleteMenu(widget.data[i]),
                 );
                 return Stack(
                   children: [
@@ -345,6 +341,7 @@ class _ComicListState extends State<ComicList> {
               setState(() {});
             };
       widgets.add(GestureDetector(
+        onLongPress: _buildDeleteDialog(widget.data[i]),
         onTap: callback,
         child: Stack(children: [
           Column(
@@ -360,6 +357,7 @@ class _ComicListState extends State<ComicList> {
                         url: widget.data[i].cover,
                         width: constraints.maxWidth,
                         height: constraints.maxHeight,
+                        addLongPressMenus: _buildDeleteMenu(widget.data[i]),
                       );
                       return image;
                     },
@@ -458,6 +456,17 @@ class _ComicListState extends State<ComicList> {
       };
     }
     return null;
+  }
+
+  List<TextMenu>? _buildDeleteMenu(ComicSimple data) {
+    return data.favouriteId > 0
+        ? [
+            TextMenu(
+              "删除收藏",
+              deleteAction(data),
+            ),
+          ]
+        : null;
   }
 
   void Function() deleteAction(ComicSimple data) {

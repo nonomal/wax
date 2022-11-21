@@ -82,7 +82,7 @@ func main() {
 		contentType = "application/octet-stream"
 	}
 	if strings.HasPrefix(flutterVersion, "2") {
-		releaseFileName = "old_flutter-" + releaseFileName
+		releaseFileName = "z-old_flutter-" + releaseFileName
 	}
 	releaseFilePath = path.Join("..", releaseFilePath)
 	info, err := os.Stat(releaseFilePath)
