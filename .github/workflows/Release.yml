@@ -154,6 +154,7 @@ jobs:
         uses: arduino/setup-protoc@v1
         with:
           version: '3.x'
+          repo-token: ${{ secrets.GH_TOKEN }}
 
       - name: Setup protoc-gen-go and dart-protoc_plugin
         if: steps.check_asset.outputs.skip_build != 'true'
