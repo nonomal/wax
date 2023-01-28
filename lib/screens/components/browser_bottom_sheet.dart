@@ -5,7 +5,7 @@ import '../../configs/host.dart';
 import '../../configs/pager_column_number.dart';
 import '../../configs/pager_controller_mode.dart';
 import '../../configs/pager_view_mode.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart' as mbs;
 import 'package:flutter/material.dart';
 
 class BrowserBottomSheetAction extends StatelessWidget {
@@ -23,7 +23,7 @@ class BrowserBottomSheetAction extends StatelessWidget {
 }
 
 Future _displayBrowserBottomSheet(BuildContext context) async {
-  await showMaterialModalBottomSheet(
+  await mbs.showMaterialModalBottomSheet(
     context: context,
     backgroundColor: const Color(0xAA000000),
     builder: (context) {

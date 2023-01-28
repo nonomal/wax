@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:wax/basic/commons.dart';
 import 'package:wax/basic/methods.dart';
 
-const _defaultHost = "https://www.htcomic.top/";
+const _defaultHost = "https://www.htmanga2.top/";
 const _hostMap = {
+  "https://www.htmanga2.top/": "HT02TOP",
+  "https://www.ssmh01.top/": "SSM01TOP",
   "https://www.htcomic.top/": "HTTOP",
-  "https://www.wnacg.top/": "TOP",
+  "https://www.wnacg.top/": "WNTOP",
   "http://www.wnacg.com/": "COM",
 };
 

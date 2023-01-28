@@ -15,7 +15,7 @@ import '../../configs/reader_type.dart';
 import '../configs/volume_controller.dart';
 import './components/content_error.dart';
 import './components/content_loading.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart' as mbs;
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
@@ -330,7 +330,7 @@ abstract class _ComicReaderState extends State<_ComicReader> {
       case ReaderControllerType.threeArea:
         return Stack(
           children: [
-            _buildViewer(),
+             _buildViewer(),
             _buildBar(_buildThreeAreaControllerAction()),
           ],
         );
@@ -706,7 +706,7 @@ abstract class _ComicReaderState extends State<_ComicReader> {
 
   //
   _onMoreSetting() async {
-    await showMaterialModalBottomSheet(
+    await mbs.showMaterialModalBottomSheet(
       context: context,
       backgroundColor: const Color(0xAA000000),
       builder: (context) {
