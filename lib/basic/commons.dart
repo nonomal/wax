@@ -11,7 +11,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wax/basic/methods.dart';
 
-
 final RouteObserver<ModalRoute<void>> routeObserver =
     RouteObserver<ModalRoute<void>>();
 
@@ -84,14 +83,14 @@ Future<T?> chooseMapDialog<T>(
 }
 
 /// 显示一个toast
-void defaultToast(BuildContext context, String title) {
+void defaultToast(BuildContext context, String title, {duration = 4}) {
   showToast(
     title,
     context: context,
     position: StyledToastPosition.center,
     animation: StyledToastAnimation.scale,
     reverseAnimation: StyledToastAnimation.fade,
-    duration: const Duration(seconds: 4),
+    duration: Duration(seconds: duration),
     animDuration: const Duration(seconds: 1),
     curve: Curves.elasticOut,
     reverseCurve: Curves.linear,

@@ -209,6 +209,13 @@ class _RegisterDialogState extends State<_RegisterDialog> {
                   icon: const Icon(Icons.arrow_back),
                 ),
                 Expanded(child: Container()),
+                 Text(
+                  "若看不到按钮请往下翻",
+                  style: TextStyle(
+                    color: Colors.grey.shade800,
+                  ),
+                ),
+                Container(width: 10),
               ],
             ),
             ListTile(

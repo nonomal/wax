@@ -89,11 +89,11 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "niuhuan" "\0"
+            VALUE "CompanyName", "opensource" "\0"
             VALUE "FileDescription", "wax" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "wax" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2022 niuhuan. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2022 opensource. All rights reserved." "\0"
             VALUE "OriginalFilename", "wax.exe" "\0"
             VALUE "ProductName", "wax" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"

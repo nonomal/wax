@@ -64,7 +64,7 @@ jobs:
             flutter_version: '2.10.3'
           - target: ios
             host: macos-latest
-            flutter_version: '3.3.8'
+            flutter_version: '3.7.0'
           - target: ios
             host: macos-latest
             flutter_version: '2.10.5'
@@ -79,13 +79,13 @@ jobs:
             flutter_version: '2.10.5'
           - target: android-arm32
             host: ubuntu-20.04
-            flutter_version: '3.3.8'
+            flutter_version: '3.7.0'
           - target: android-arm64
             host: ubuntu-20.04
-            flutter_version: '3.3.8'
+            flutter_version: '3.7.0'
           - target: android-x86_64
             host: ubuntu-20.04
-            flutter_version: '3.3.8'
+            flutter_version: '3.7.0'
 
     runs-on: ${{ matrix.config.host }}
 
@@ -244,6 +244,7 @@ jobs:
         run: |
           sed -i "s/another_xlider: 1.0.1+2/another_xlider: ^1.0.1+2/g" pubspec.yaml
           sed -i "s/flutter_styled_toast: 2.0.0/flutter_styled_toast: ^2.0.0/g" pubspec.yaml
+          sed -i "s/modal_bottom_sheet: ^3.0.0-pre/modal_bottom_sheet: 2.0.1/g" pubspec.yaml
 
       - name: Upgrade deps version (iOS)
         if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.host == 'macos-latest' && startsWith(matrix.config.flutter_version, '3')
@@ -251,6 +252,7 @@ jobs:
           brew install gnu-sed
           gsed -i "s/another_xlider: 1.0.1+2/another_xlider: ^1.0.1+2/g" pubspec.yaml
           gsed -i "s/flutter_styled_toast: 2.0.0/flutter_styled_toast: ^2.0.0/g" pubspec.yaml
+          gsed -i "s/modal_bottom_sheet: ^3.0.0-pre/modal_bottom_sheet: 2.0.1/g" pubspec.yaml
 
       - name: Install go mobile (mobile)
         if: steps.check_asset.outputs.skip_build != 'true' && ( matrix.config.target == 'ios' || matrix.config.target == 'android-arm64' || matrix.config.target == 'android-arm32' || matrix.config.target == 'android-x86_64' )
@@ -295,7 +297,7 @@ jobs:
       - name: Add application-identifier (ios)
         if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.target == 'ios'
         run: |
-          /usr/libexec/PlistBuddy -c 'Add :application-identifier string niuhuan.wax' ios/Runner/Info.plist
+          /usr/libexec/PlistBuddy -c 'Add :application-identifier string opensource.wax' ios/Runner/Info.plist
 
       - name: Build (ios)
         if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.target == 'ios'

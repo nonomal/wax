@@ -57,7 +57,7 @@ class _ProScreenState extends State<ProScreen> {
                             defaultToast(context, "注册成功");
                           }
                         } catch (e) {
-                          defaultToast(context, "$e");
+                          defaultToast(context, "$e", duration: 7);
                         }
                       },
                       child: Text(

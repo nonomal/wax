@@ -49,3 +49,18 @@ Future chooseHost(BuildContext context) async {
     }
   }
 }
+
+Widget hostSetting() {
+  return StatefulBuilder(
+    builder: (BuildContext context, void Function(void Function()) setState) {
+      return ListTile(
+        title: const Text("分流"),
+        subtitle: Text("${_hostMap[host]} (登录注册不上试试换分流)"),
+        onTap: () async {
+          await chooseHost(context);
+          setState(() {});
+        },
+      );
+    },
+  );
+}

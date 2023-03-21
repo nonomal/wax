@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wax/basic/methods.dart';
 import 'package:wax/configs/host.dart';
 import 'package:wax/configs/is_pro.dart';
 import 'package:wax/configs/pager_column_number.dart';
@@ -18,6 +19,7 @@ import '../configs/themes.dart';
 import '../configs/versions.dart';
 import '../configs/volume_controller.dart';
 import 'app_screen.dart';
+import 'first_login_screen.dart';
 
 class InitScreen extends StatefulWidget {
   const InitScreen({Key? key}) : super(key: key);
@@ -46,9 +48,23 @@ class _InitScreenState extends State<InitScreen> {
     await initDownloadThreadCount();
     autoCheckNewVersion();
     await initLogin();
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (BuildContext context) => const AppScreen()),
-    );
+    if (await methods.loadProperty(k: "last_username") == "") {
+      Future.delayed(Duration.zero, () async {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (BuildContext context) {
+            return firstLoginScreen;
+          }),
+        );
+      });
+    } else {
+      Future.delayed(Duration.zero, () async {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (BuildContext context) {
+            return const AppScreen();
+          }),
+        );
+      });
+    }
   }
 
   @override
