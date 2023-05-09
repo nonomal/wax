@@ -11,6 +11,7 @@ import '../configs/android_version.dart';
 import '../configs/auto_clean.dart';
 import '../configs/download_thread_count.dart';
 import '../configs/login_state.dart';
+import '../configs/passed.dart';
 import '../configs/reader_controller_type.dart';
 import '../configs/reader_direction.dart';
 import '../configs/reader_slider_position.dart';
@@ -19,6 +20,7 @@ import '../configs/themes.dart';
 import '../configs/versions.dart';
 import '../configs/volume_controller.dart';
 import 'app_screen.dart';
+import 'calculator_screen.dart';
 import 'first_login_screen.dart';
 
 class InitScreen extends StatefulWidget {
@@ -46,13 +48,14 @@ class _InitScreenState extends State<InitScreen> {
     await initVolumeController();
     await reloadIsPro();
     await initDownloadThreadCount();
+    await initPassed();
     autoCheckNewVersion();
     await initLogin();
-    if (await methods.loadProperty(k: "last_username") == "") {
+    if (!currentPassed()) {
       Future.delayed(Duration.zero, () async {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (BuildContext context) {
-            return firstLoginScreen;
+            return const CalculatorScreen();
           }),
         );
       });

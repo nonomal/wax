@@ -5,9 +5,9 @@ import 'package:wax/basic/methods.dart';
 
 const _defaultHost = "https://www.htmanga2.top/";
 const _hostMap = {
-  "http://www.htmanga3.top/": "TOP3",
-  "http://www.htmanga4.top/": "TOP4",
-  "http://www.htmanga5.top/": "TOP5",
+  "https://www.htmanga3.top/": "TOP3",
+  "https://www.htmanga4.top/": "TOP4",
+  "https://www.htmanga5.top/": "TOP5",
 };
 
 late String host;
