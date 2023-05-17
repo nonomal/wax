@@ -19,11 +19,6 @@ Future _updateHost(String choose) async {
 Future chooseHost(BuildContext context) async {
   var choose = await displayTextInputDialog(context, src: host);
   if (choose != null) {
-    // 正则判断是否未网站uri
-    if (!RegExp(r"^https://[A-Za-z0-9\-_](\.[A-Za-z0-9\-_])+$").hasMatch(choose)) {
-      defaultToast(context, "请输入正确的网站地址, 必须以https开头, 结尾不能添加斜线。例如 https://aa.bb.cc");
-      return;
-    }
     await _updateHost(choose);
   }
 }
