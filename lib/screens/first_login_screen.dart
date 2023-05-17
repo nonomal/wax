@@ -20,76 +20,18 @@ class FirstLoginScreen extends StatefulWidget {
 }
 
 class _FirstLoginScreenState extends State<FirstLoginScreen> {
-  bool _logging = false;
-  String _username = "";
-  String _password = "";
-  int _onClickVersion = 0;
-
-  Widget _usernameField() {
-    return ListTile(
-      title: const Text("账号"),
-      subtitle: Text(_username),
-      onTap: () async {
-        final input = await displayTextInputDialog(
-          context,
-          hint: "请输入账号",
-          title: "账号",
-          src: _username,
-        );
-        if (input != null) {
-          setState(() {
-            _username = input;
-          });
-        }
-      },
-    );
-  }
-
-  Widget _passwordField() {
-    return ListTile(
-      title: const Text("密码"),
-      subtitle: Text(_password.isEmpty ? "" : '********'),
-      onTap: () async {
-        final input = await displayTextInputDialog(
-          context,
-          hint: "请输入密码",
-          title: "密码",
-          isPasswd: true,
-          src: _password,
-        );
-        if (input != null) {
-          setState(() {
-            _password = input;
-          });
-        }
-      },
-    );
-  }
 
   late final _saveButton = IconButton(
     onPressed: () async {
-      setState(() {
-        _logging = true;
-      });
-      try {
-        await methods.login(_username, _password);
-        try {
-          await reloadIsPro();
-        } catch (e, s) {
-          print("$e\n$s");
-        }
-        Navigator.pushReplacement(context, MaterialPageRoute(
-          builder: (BuildContext context) {
-            return const AppScreen();
-          },
-        ));
-      } catch (e, s) {
-        print("$e\n$s");
-        defaultToast(context, "$e", duration: 7);
-        setState(() {
-          _logging = false;
-        });
+      if (host.isEmpty) {
+        defaultToast(context, "请填写分流");
+        return;
       }
+      Navigator.pushReplacement(context, MaterialPageRoute(
+        builder: (BuildContext context) {
+          return const AppScreen();
+        },
+      ));
     },
     icon: const Icon(Icons.save),
   );
@@ -99,49 +41,14 @@ class _FirstLoginScreenState extends State<FirstLoginScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("登录"),
-        actions: _logging
-            ? []
-            : [
-                SizedBox(
-                  width: 80,
-                  child: IconButton(
-                    onPressed: () async {
-                      setState(() {
-                        _onClickVersion++;
-                      });
-                      if (_onClickVersion >= 7) {
-                        setState(() {
-                          _logging = true;
-                        });
-                        try {
-                          if (await registerDialog(context)) {
-                            defaultToast(context, "注册成功", duration: 10);
-                          }
-                        } catch (e, s) {
-                          print("$e\n$s");
-                          defaultToast(context, "$e", duration: 8);
-                        }
-                        setState(() {
-                          _logging = false;
-                        });
-                      }
-                    },
-                    icon: Text(currentVersion()),
-                  ),
-                ),
-                _saveButton,
-              ],
+        actions: [
+          _saveButton,
+        ],
       ),
       body: ListView(
-        children: _logging
-            ? [
-                const Center(child: ContentLoading()),
-              ]
-            : [
-                _usernameField(),
-                _passwordField(),
-                hostSetting(),
-              ],
+        children: [
+          hostSetting(),
+        ],
       ),
     );
   }

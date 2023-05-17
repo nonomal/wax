@@ -1,16 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'dart:async' show Future;
-import 'dart:convert';
 import 'package:event/event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:wax/basic/methods.dart';
-
 import '../basic/commons.dart';
-import '../screens/components/badge.dart';
 
-const _releasesUrl = "https://github.com/niuhuan/wax/releases";
-const _versionUrl = "https://api.github.com/repos/niuhuan/wax/releases/latest";
 const _versionAssets = 'lib/assets/version.txt';
 RegExp _versionExp = RegExp(r"^v\d+\.\d+.\d+$");
 
@@ -61,17 +55,6 @@ bool dirtyVersion() {
 
 // maybe exception
 Future _versionCheck() async {
-  if (_versionExp.hasMatch(_version)) {
-    var json = jsonDecode(await methods.httpGet(url: _versionUrl));
-    if (json["name"] != null) {
-      String latestVersion = (json["name"]);
-      if (latestVersion != _version) {
-        _latestVersion = latestVersion;
-        _latestVersionInfo = json["body"] ?? "";
-      }
-    }
-  } // else dirtyVersion
-  versionEvent.broadcast();
 }
 
 String formatDateTimeToDateTime(DateTime c) {
@@ -103,56 +86,12 @@ class _VersionInfoState extends State<VersionInfo> {
               height: 1.3,
             ),
           ),
-          Row(
-            children: [
-              const Text(
-                "检查更新 : ",
-                style: TextStyle(
-                  height: 1.3,
-                ),
-              ),
-              "dirty" == _version
-                  ? _buildDirty()
-                  : _buildNewVersion(_latestVersion),
-              Expanded(child: Container()),
-            ],
-          ),
-          _buildNewVersionInfo(_latestVersionInfo),
         ],
       ),
     );
   }
 
   Widget _buildNewVersion(String? latestVersion) {
-    if (latestVersion != null) {
-      return Text.rich(
-        TextSpan(
-          children: [
-            WidgetSpan(
-              child: VersionBadged(
-                child: Container(
-                  padding: const EdgeInsets.only(right: 12),
-                  child: Text(
-                    latestVersion,
-                    style: const TextStyle(height: 1.3),
-                  ),
-                ),
-              ),
-            ),
-            const TextSpan(text: "  "),
-            TextSpan(
-              text: "去下载",
-              style: TextStyle(
-                height: 1.3,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () => openUrl(_releasesUrl),
-            ),
-          ],
-        ),
-      );
-    }
     return Text.rich(
       TextSpan(
         children: [
@@ -178,61 +117,6 @@ class _VersionInfoState extends State<VersionInfo> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildDirty() {
-    return VersionBadged(
-      child: Text.rich(
-        TextSpan(
-          text: "下载RELEASE版     ",
-          style: TextStyle(
-            height: 1.3,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-          recognizer: TapGestureRecognizer()
-            ..onTap = () => openUrl(_releasesUrl),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNewVersionInfo(String? latestVersionInfo) {
-    if (latestVersionInfo != null) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Divider(),
-          const Text("更新内容:"),
-          Container(
-            padding: EdgeInsets.all(15),
-            child: Text(
-              latestVersionInfo,
-              style: TextStyle(),
-            ),
-          ),
-        ],
-      );
-    }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Divider(),
-        Container(
-          padding: const EdgeInsets.all(15),
-          child: Text.rich(
-            TextSpan(
-              text: "去RELEASE仓库",
-              style: TextStyle(
-                height: 1.3,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () => openUrl(_releasesUrl),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

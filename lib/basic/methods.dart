@@ -189,17 +189,6 @@ class Methods {
     ));
   }
 
-  Future<IsPro> reloadPro() async {
-    return IsPro.fromBuffer(await _flatInvoke(
-      "reloadPro",
-      Empty(),
-    ));
-  }
-
-  Future inputCdKey(String k) {
-    return _flatInvoke("inputCdKey", Puff(value: k));
-  }
-
   Future saveViewInfo(ComicInfoResult info) async {
     // todo
   }
@@ -346,6 +335,17 @@ class Methods {
         host: host,
         comicId: comicId,
         partitionId: partitionId,
+      ),
+    );
+  }
+
+  Future setIsPro(
+    bool isPro,
+  ) async {
+    return _flatInvoke(
+      "favoriteComic",
+      SetIsPro(
+        isPro: isPro,
       ),
     );
   }
