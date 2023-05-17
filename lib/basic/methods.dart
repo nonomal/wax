@@ -343,7 +343,7 @@ class Methods {
     bool isPro,
   ) async {
     return _flatInvoke(
-      "favoriteComic",
+      "setIsPro",
       SetIsPro(
         isPro: isPro,
       ),
