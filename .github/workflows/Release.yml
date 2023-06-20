@@ -189,12 +189,6 @@ jobs:
         run: |
           protoc --dart_out=lib/ --go_out=go/ protos/*.proto
 
-      - name: pub upgrade
-        if: steps.check_asset.outputs.skip_build != 'true'
-        run: |
-          flutter pub upgrade
-          flutter pub get
-
       - name: Cache Flutter dependencies (Linux/Android)
         if: steps.check_asset.outputs.skip_build != 'true' && ( matrix.config.target == 'android-arm32' || matrix.config.target == 'android-arm64' || matrix.config.target == 'android-x86_64' || matrix.config.target == 'linux' )
         uses: actions/cache@v3
@@ -261,6 +255,11 @@ jobs:
           gsed -i "s/flutter_styled_toast: ^2.0.0/flutter_styled_toast: 2.0.0/g" pubspec.yaml
           gsed -i "s/modal_bottom_sheet: ^3.0.0-pre/modal_bottom_sheet: 2.0.1/g" pubspec.yaml
           gsed -i "s/photo_view: ^0.14.0/photo_view: 0.13.0/g" pubspec.yaml
+
+      - name: pub get
+        if: steps.check_asset.outputs.skip_build != 'true'
+        run: |
+          flutter pub get
 
       - name: Install go mobile (mobile)
         if: steps.check_asset.outputs.skip_build != 'true' && ( matrix.config.target == 'ios' || matrix.config.target == 'android-arm64' || matrix.config.target == 'android-arm32' || matrix.config.target == 'android-x86_64' )
