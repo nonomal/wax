@@ -125,7 +125,7 @@ class _BrowserBottomSheetState extends State<_BrowserBottomSheet> {
             Expanded(child: Container()),
             _bottomIcon(
               icon: Icons.repeat_one,
-              title: host,
+              title: currentHost(),
               onPressed: () async {
                 await chooseHost(context);
                 setState(() {});

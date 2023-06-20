@@ -160,7 +160,7 @@ class _StreamPagerState extends State<_StreamPager> {
                 padding: const EdgeInsets.only(top: 10, bottom: 10),
                 child: const Icon(Icons.sync_problem_rounded),
               ),
-              const Text('出错, 点击重试'),
+              const Text(' 出错, 点击重试'),
             ],
           ),
         ),

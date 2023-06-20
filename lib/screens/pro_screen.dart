@@ -96,6 +96,24 @@ class _ProScreenState extends State<ProScreen> {
               : Center(child: Text(_username)),
           Container(height: 20),
           const Divider(),
+          const Padding(
+            padding: EdgeInsets.all(20),
+            child: Text(
+              "点击\"我曾经发过电\"进同步发电状态\n"
+              "点击\"我刚才发了电\"兑换作者给您的礼物卡\n"
+              "去\"关于\"界面找到维护地址用爱发电",
+            ),
+          ),
+          const Divider(),
+          const Padding(
+            padding: EdgeInsets.all(20),
+            child: Text(
+              "发电小功能 \n"
+              "  多线程下载\n"
+              "  批量导入导出\n"
+              "  跳页",
+            ),
+          ),
           const Divider(),
           ListTile(
             title: const Text("发电详情"),
@@ -107,21 +125,14 @@ class _ProScreenState extends State<ProScreen> {
           ),
           const Divider(),
           ListTile(
-            title: const Text("设置发电状态"),
+            title: const Text("我曾经发过电"),
             onTap: () async {
-              var choose = await chooseListDialog(
-                context,
-                values: ["是", "否"],
-                title: '发电状态',
-              );
-              if (choose == null) return;
-              if (choose == "是") {
-                await methods.setIsPro(true);
-              } else {
-                await methods.setIsPro(false);
+              if (_username.isEmpty) {
+                defaultToast(context, "先登录");
+                return;
               }
               try {
-                await reloadIsPro();
+                await methods.reloadPro();
                 defaultToast(context, "SUCCESS");
               } catch (e, s) {
                 defaultToast(context, "FAIL");
@@ -131,6 +142,26 @@ class _ProScreenState extends State<ProScreen> {
             },
           ),
           const Divider(),
+          ListTile(
+            title: const Text("我刚才发了电"),
+            onTap: () async {
+              if (_username.isEmpty) {
+                defaultToast(context, "先登录");
+                return;
+              }
+              final code = await displayTextInputDialog(context, title: "输入代码");
+              if (code != null && code.isNotEmpty) {
+                try {
+                  await methods.inputCdKey(code);
+                  defaultToast(context, "SUCCESS");
+                } catch (e, s) {
+                  defaultToast(context, "FAIL");
+                }
+              }
+              await reloadIsPro();
+              setState(() {});
+            },
+          ),
           const Divider(),
         ],
       ),

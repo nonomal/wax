@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_search_bar/flutter_search_bar.dart';
+import 'package:flutter_search_bar/flutter_search_bar.dart' as sb;
 import 'package:wax/basic/methods.dart';
 
 import '../protos/properties.pb.dart';
@@ -19,7 +19,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   late final TextEditingController _textEditController =
   TextEditingController(text: widget.keyword);
-  late final SearchBar _searchBar = SearchBar(
+  late final sb.SearchBar _searchBar = sb.SearchBar(
     hintText: '搜索',
     controller: _textEditController,
     inBar: false,

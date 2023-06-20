@@ -5,9 +5,11 @@ wax
 [![downloads](https://img.shields.io/github/downloads/niuhuan/wax/total)](https://github.com/niuhuan/wax/releases)
 
 - 美观易用且无广告的漫画客户端, 能运行在Windows/MacOS/Linux/Android/IOS中。
-- 此APP只是个客户端，不包含任何内容。需要您自行寻找漫画源使用。
-- 部分漫画源内容存在限制级别内容(例如 露骨/血腥/暴力/吸毒)，18岁以下的用户需在监护人陪同下使用，并请您在遵守当地法律法规。
-- 您的star是对开发者的莫大鼓励，源仓库地址 [https://github.com/niuhuan/wax](https://github.com/niuhuan/wax)
+- 此APP内容存在限制级别内容(例如 露骨/血腥/暴力/吸毒)，18岁以下的用户需在监护人陪同下使用，并请您在遵守当地法律法规。
+- 您的star和issue是对开发者的莫大鼓励, 可以源仓库下载最新的源码/安装包, 表示支持/提出建议。
+- 源仓库地址 [https://github.com/niuhuan/wax](https://github.com/niuhuan/wax)
+
+
 
 ## 技术架构
 

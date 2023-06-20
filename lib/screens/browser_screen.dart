@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_search_bar/flutter_search_bar.dart';
+import 'package:flutter_search_bar/flutter_search_bar.dart' as sb;
 import 'package:wax/basic/methods.dart';
 import 'package:wax/configs/host.dart';
 import 'package:wax/protos/properties.pb.dart';
@@ -57,7 +57,7 @@ class _BrowserScreenState extends State<BrowserScreen>
     versionPop(context);
   }
 
-  late final SearchBar _searchBar = SearchBar(
+  late final sb.SearchBar _searchBar = sb.SearchBar(
     hintText: '搜索',
     inBar: false,
     setState: setState,

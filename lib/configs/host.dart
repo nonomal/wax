@@ -3,11 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:wax/basic/commons.dart';
 import 'package:wax/basic/methods.dart';
 
+const _defaultHost = "https://www.wnacg.com";
+const _hostMap = {
+  "https://www.wnacg.com": "MAIN",
+  "https://www.htmanga9.top": "TOP9",
+};
+
 late String host;
 final hostEvent = Event();
 
 Future initHost() async {
+  if (await methods.loadProperty(k: "fc_host") == "") {
+    await methods.saveProperty(k: "fc_host", v: "true");
+    await methods.saveProperty(k: "host", v: _defaultHost);
+  }
   host = await methods.loadProperty(k: "host");
+  if (host == "") {
+    host = _defaultHost;
+  }
 }
 
 Future _updateHost(String choose) async {
@@ -16,15 +29,25 @@ Future _updateHost(String choose) async {
   hostEvent.broadcast();
 }
 
+currentHost() {
+  return _hostMap[host] ?? "自定义";
+}
+
 Future chooseHost(BuildContext context) async {
-  var choose = await displayTextInputDialog(context, src: host);
-  if (choose != null) {
-    // 正则判断是否未网站uri
-    if (!RegExp(r"^https://[A-Za-z0-9\-_]+(\.[A-Za-z0-9\-_]+)+$").hasMatch(choose)) {
-      defaultToast(context, "请输入正确的网站地址, 必须以https开头, 结尾不能添加斜线。例如 https://aa.bb.cc");
-      return;
+  var choose =
+      await chooseListDialog(context, values: ["选择预设", "手动输入"], title: '分流');
+  if ("选择预设" == choose) {
+    choose = await chooseMapDialog(context,
+        title: "分流",
+        values: _hostMap.map((key, value) => MapEntry(value, key)));
+    if (choose != null) {
+      await _updateHost(choose);
     }
-    await _updateHost(choose);
+  } else if ("手动输入" == choose) {
+    choose = await displayTextInputDialog(context, src: host);
+    if (choose != null) {
+      await _updateHost(choose);
+    }
   }
 }
 
@@ -33,7 +56,7 @@ Widget hostSetting() {
     builder: (BuildContext context, void Function(void Function()) setState) {
       return ListTile(
         title: const Text("分流"),
-        subtitle: Text(host),
+        subtitle: Text("${_hostMap[host]} (登录注册不上试试换分流或改变网络)"),
         onTap: () async {
           await chooseHost(context);
           setState(() {});
