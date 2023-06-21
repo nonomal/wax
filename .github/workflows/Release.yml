@@ -259,31 +259,31 @@ jobs:
           gsed -i "s/modal_bottom_sheet: ^3.0.0-pre/modal_bottom_sheet: 2.0.1/g" pubspec.yaml
           flutter pub get
 
-      - name: Install Protoc
-        if: steps.check_asset.outputs.skip_build != 'true'
-        uses: arduino/setup-protoc@v1
-        with:
-          version: '3.x'
-          repo-token: ${{ secrets.GH_TOKEN }}
-
-      - name: Setup protoc-gen-go and dart-protoc_plugin
-        if: steps.check_asset.outputs.skip_build != 'true'
-        run: |
-          go install github.com/golang/protobuf/protoc-gen-go@latest
-          dart pub global activate protoc_plugin
-
-      - name: dart-protoc path (non-windows)
-        if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.target != 'windows'
-        run: echo "${HOME}/.pub-cache/bin" >> $GITHUB_PATH
-
-      - name: dart-protoc path (windows)
-        if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.target == 'windows'
-        run: echo "${HOME}/.pub-cache/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-
-      - name: Gen proto class
-        if: steps.check_asset.outputs.skip_build != 'true'
-        run: |
-          protoc --dart_out=lib/ --go_out=go/ protos/*.proto
+#      - name: Install Protoc
+#        if: steps.check_asset.outputs.skip_build != 'true'
+#        uses: arduino/setup-protoc@v1
+#        with:
+#          version: '3.x'
+#          repo-token: ${{ secrets.GH_TOKEN }}
+#
+#      - name: Setup protoc-gen-go and dart-protoc_plugin
+#        if: steps.check_asset.outputs.skip_build != 'true'
+#        run: |
+#          go install github.com/golang/protobuf/protoc-gen-go@latest
+#          dart pub global activate protoc_plugin
+#
+#      - name: dart-protoc path (non-windows)
+#        if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.target != 'windows'
+#        run: echo "${HOME}/.pub-cache/bin" >> $GITHUB_PATH
+#
+#      - name: dart-protoc path (windows)
+#        if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.target == 'windows'
+#        run: echo "${HOME}/.pub-cache/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+#
+#      - name: Gen proto class
+#        if: steps.check_asset.outputs.skip_build != 'true'
+#        run: |
+#          protoc --dart_out=lib/ --go_out=go/ protos/*.proto
 
       - name: Build (windows)
         if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.target == 'windows'
