@@ -8,6 +8,7 @@ import (
 	"github.com/andersfylling/disgord"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"io/ioutil"
+	"log"
 	"os"
 	"strings"
 )
@@ -38,7 +39,6 @@ func main() {
 	tgChatIdsStr := os.Getenv("TG_CHAT_IDS")
 	discordToken := os.Getenv("DISCORD_BOT_TOKEN")
 	discordChatIdsStr := os.Getenv("DISCORD_CHAT_IDS")
-	fmt.Printf(" : %v : %v : %v : %v :", len(tgToken), len(tgChatIdsStr), len(discordToken), len(discordChatIdsStr))
 	if tgToken != "" && tgChatIdsStr != "" {
 		var tgChatIds []int64
 		json.Unmarshal([]byte(tgChatIdsStr), &tgChatIds)
@@ -58,7 +58,7 @@ func main() {
 func sendMessageToTg(token string, ids []int64, message string) {
 	bot, err := tgbotapi.NewBotAPI(token)
 	if err != nil {
-		fmt.Sprintf("tgbotapi error : %v (error : %v)", err.Error())
+		log.Panic(err)
 	}
 	for _, id := range ids {
 		msg := tgbotapi.NewMessage(id, message)

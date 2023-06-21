@@ -10,10 +10,6 @@ import (
 	"strings"
 )
 
-const owner = "niuhuan"
-const repo = "wax"
-const ua = "niuhuan wax ci"
-
 func main() {
 	// get ghToken
 	ghToken := os.Getenv("GH_TOKEN")
@@ -22,17 +18,7 @@ func main() {
 		os.Exit(1)
 	}
 	// get version
-	var version commons.Version
-	codeFile, err := ioutil.ReadFile("version.code.txt")
-	if err != nil {
-		panic(err)
-	}
-	version.Code = strings.TrimSpace(string(codeFile))
-	infoFile, err := ioutil.ReadFile("version.info.txt")
-	if err != nil {
-		panic(err)
-	}
-	version.Info = strings.TrimSpace(string(infoFile))
+	version := commons.LoadVersion()
 	// get target
 	target := os.Getenv("TARGET")
 	if target == "" {
@@ -63,19 +49,19 @@ func main() {
 	case "android-x86_64":
 		releaseFileName = fmt.Sprintf("wax-%v-android-x86_64.apk", version.Code)
 	}
-	if strings.HasPrefix(flutterVersion, "2") {
-		releaseFileName = "z-old_flutter-" + releaseFileName
+	if strings.HasPrefix(flutterVersion, "2.") {
+		releaseFileName = "z-of-" + releaseFileName
 	}
 	// get version
 	getReleaseRequest, err := http.NewRequest(
 		"GET",
-		fmt.Sprintf("https://api.github.com/repos/%v/%v/releases/tags/%v", owner, repo, version.Code),
+		fmt.Sprintf("https://api.github.com/repos/%v/%v/releases/tags/%v", commons.Owner, commons.Repo, version.Code),
 		nil,
 	)
 	if err != nil {
 		panic(err)
 	}
-	getReleaseRequest.Header.Set("User-Agent", ua)
+	getReleaseRequest.Header.Set("User-Agent", commons.Ua)
 	getReleaseRequest.Header.Set("Authorization", "token "+ghToken)
 	getReleaseResponse, err := http.DefaultClient.Do(getReleaseRequest)
 	if err != nil {
