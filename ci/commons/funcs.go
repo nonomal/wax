@@ -6,8 +6,8 @@ import (
 )
 
 const Owner = "niuhuan"
-const Repo = "pikapika"
-const Ua = "niuhuan pikapika ci"
+const Repo = "wax"
+const Ua = "niuhuan wax ci"
 const MainBranch = "master"
 
 func LoadVersion() Version {
