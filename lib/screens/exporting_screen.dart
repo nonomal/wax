@@ -65,7 +65,7 @@ class _ExportingScreenState extends State<ExportingScreen> {
           Text("您一共选择了 ${widget.selected.length} 个漫画"),
           const SizedBox(height: 20),
           exportToZipButton(),
-          exportToCzbButton(),
+          exportToCbzButton(),
         ],
       ),
     );
@@ -126,16 +126,16 @@ class _ExportingScreenState extends State<ExportingScreen> {
       onPressed: () async {
         _export(1);
       },
-      child: const Text("导出到zip"),
+      child: const Text("导出到*.jpegs.zip"),
     );
   }
 
-  Widget exportToCzbButton() {
+  Widget exportToCbzButton() {
     return ElevatedButton(
       onPressed: () async {
         _export(2);
       },
-      child: const Text("导出到czb"),
+      child: const Text("导出到*.cbz"),
     );
   }
 
@@ -178,7 +178,8 @@ class _ExportingScreenState extends State<ExportingScreen> {
         g = await Permission.manageExternalStorage.request().isGranted;
       }
       if (!g) {
-        throw Exception("申请权限被拒绝");
+        defaultToast(context, "申请权限被拒绝");
+        return null;
       }
     }
     return FilePicker.platform
