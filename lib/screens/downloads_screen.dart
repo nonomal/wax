@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:wax/basic/commons.dart';
 import 'package:wax/basic/methods.dart';
 import 'package:wax/screens/comic_info_screen.dart';
-import 'package:wax/screens/components/comic_info_card.dart';
 import 'package:wax/screens/components/content_builder.dart';
 
 import '../configs/download_thread_count.dart';
 import '../protos/properties.pb.dart';
 import 'components/download_info_card.dart';
 import 'download_info_screen.dart';
+import 'exports_screen.dart';
 
 class DownloadsScreen extends StatefulWidget {
   const DownloadsScreen({Key? key}) : super(key: key);
@@ -27,6 +27,7 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
       appBar: AppBar(
         title: const Text("下载"),
         actions: [
+          exportScreenButton(),
           threadCountButton(),
           IconButton(
             onPressed: () async {
@@ -110,6 +111,18 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
         "$downloadThreadCount线程",
         style: const TextStyle(color: Colors.white),
       ),
+    );
+  }
+
+  Widget exportScreenButton() {
+    return IconButton(
+      icon: const Icon(Icons.sim_card_download_outlined),
+      onPressed: () async {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (BuildContext context) {
+          return const ExportsScreen();
+        }));
+      },
     );
   }
 }

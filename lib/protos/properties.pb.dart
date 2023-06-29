@@ -2802,3 +2802,72 @@ class DeleteFavoriteQuery extends $pb.GeneratedMessage {
   void clearFavouriteId() => clearField(2);
 }
 
+class ExportComicsQuery extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ExportComicsQuery', createEmptyInstance: create)
+    ..p<$fixnum.Int64>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'comicIds', $pb.PbFieldType.K6, protoName: 'comicIds')
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'folder')
+    ..a<$core.int>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'exportType', $pb.PbFieldType.O3, protoName: 'exportType')
+    ..hasRequiredFields = false
+  ;
+
+  ExportComicsQuery._() : super();
+  factory ExportComicsQuery({
+    $core.Iterable<$fixnum.Int64>? comicIds,
+    $core.String? folder,
+    $core.int? exportType,
+  }) {
+    final _result = create();
+    if (comicIds != null) {
+      _result.comicIds.addAll(comicIds);
+    }
+    if (folder != null) {
+      _result.folder = folder;
+    }
+    if (exportType != null) {
+      _result.exportType = exportType;
+    }
+    return _result;
+  }
+  factory ExportComicsQuery.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory ExportComicsQuery.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  ExportComicsQuery clone() => ExportComicsQuery()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  ExportComicsQuery copyWith(void Function(ExportComicsQuery) updates) => super.copyWith((message) => updates(message as ExportComicsQuery)) as ExportComicsQuery; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static ExportComicsQuery create() => ExportComicsQuery._();
+  ExportComicsQuery createEmptyInstance() => create();
+  static $pb.PbList<ExportComicsQuery> createRepeated() => $pb.PbList<ExportComicsQuery>();
+  @$core.pragma('dart2js:noInline')
+  static ExportComicsQuery getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ExportComicsQuery>(create);
+  static ExportComicsQuery? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.List<$fixnum.Int64> get comicIds => $_getList(0);
+
+  @$pb.TagNumber(2)
+  $core.String get folder => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set folder($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasFolder() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearFolder() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.int get exportType => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set exportType($core.int v) { $_setSignedInt32(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasExportType() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearExportType() => clearField(3);
+}
+

@@ -349,4 +349,23 @@ class Methods {
       ),
     );
   }
+
+  Future exportToDir(
+    String folder,
+    List<$fixnum.Int64> comicIds,
+    int exportType,
+  ) {
+    return _flatInvoke(
+      "exportToDir",
+      ExportComicsQuery(
+        comicIds: comicIds,
+        folder: folder,
+        exportType: exportType,
+      ),
+    );
+  }
+
+  Future<String> iosGetDocumentDir() async {
+    return await _channel.invokeMethod('iosGetDocumentDir', '');
+  }
 }

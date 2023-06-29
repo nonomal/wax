@@ -487,3 +487,15 @@ const DeleteFavoriteQuery$json = const {
 
 /// Descriptor for `DeleteFavoriteQuery`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List deleteFavoriteQueryDescriptor = $convert.base64Decode('ChNEZWxldGVGYXZvcml0ZVF1ZXJ5EhIKBGhvc3QYASABKAlSBGhvc3QSIAoLZmF2b3VyaXRlSWQYAiABKANSC2Zhdm91cml0ZUlk');
+@$core.Deprecated('Use exportComicsQueryDescriptor instead')
+const ExportComicsQuery$json = const {
+  '1': 'ExportComicsQuery',
+  '2': const [
+    const {'1': 'comicIds', '3': 1, '4': 3, '5': 3, '10': 'comicIds'},
+    const {'1': 'folder', '3': 2, '4': 1, '5': 9, '10': 'folder'},
+    const {'1': 'exportType', '3': 3, '4': 1, '5': 5, '10': 'exportType'},
+  ],
+};
+
+/// Descriptor for `ExportComicsQuery`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List exportComicsQueryDescriptor = $convert.base64Decode('ChFFeHBvcnRDb21pY3NRdWVyeRIaCghjb21pY0lkcxgBIAMoA1IIY29taWNJZHMSFgoGZm9sZGVyGAIgASgJUgZmb2xkZXISHgoKZXhwb3J0VHlwZRgDIAEoBVIKZXhwb3J0VHlwZQ==');
