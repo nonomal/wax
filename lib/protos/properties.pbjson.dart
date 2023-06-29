@@ -358,6 +358,16 @@ const DownloadComicPageDto$json = const {
 
 /// Descriptor for `DownloadComicPageDto`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List downloadComicPageDtoDescriptor = $convert.base64Decode('ChREb3dubG9hZENvbWljUGFnZUR0bxIUCgV3aWR0aBgBIAEoA1IFd2lkdGgSFgoGaGVpZ2h0GAIgASgDUgZoZWlnaHQSFgoGZm9ybWF0GAMgASgJUgZmb3JtYXQSEgoEcGF0aBgEIAEoCVIEcGF0aBIQCgN1cmwYBSABKAlSA3VybBIYCgdjYXB0aW9uGAYgASgJUgdjYXB0aW9u');
+@$core.Deprecated('Use stringValueDescriptor instead')
+const StringValue$json = const {
+  '1': 'StringValue',
+  '2': const [
+    const {'1': 'value', '3': 1, '4': 1, '5': 9, '10': 'value'},
+  ],
+};
+
+/// Descriptor for `StringValue`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List stringValueDescriptor = $convert.base64Decode('CgtTdHJpbmdWYWx1ZRIUCgV2YWx1ZRgBIAEoCVIFdmFsdWU=');
 @$core.Deprecated('Use intValueDescriptor instead')
 const IntValue$json = const {
   '1': 'IntValue',

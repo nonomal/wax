@@ -1,4 +1,4 @@
-package opensource.wax
+package opensource.wax22
 
 import android.content.ContentValues
 import android.content.DialogInterface

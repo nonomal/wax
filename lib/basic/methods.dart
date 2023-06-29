@@ -368,4 +368,22 @@ class Methods {
   Future<String> iosGetDocumentDir() async {
     return await _channel.invokeMethod('iosGetDocumentDir', '');
   }
+
+  Future<String> getProServerName() async {
+    final buff = await _flatInvoke(
+        "getProServerName",
+        FavoritesPartitionsQuery(
+          host: host,
+        ));
+    return StringValue.fromBuffer(buff).value;
+  }
+
+  Future<String> setProServerName(String severName) async {
+    final buff = await _flatInvoke(
+        "setProServerName",
+        StringValue(
+          value: severName,
+        ));
+    return StringValue.fromBuffer(buff).value;
+  }
 }

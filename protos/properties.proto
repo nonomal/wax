@@ -175,6 +175,10 @@ message DownloadComicPageDto {
   string caption = 6;
 }
 
+message StringValue {
+  string value = 1;
+}
+
 message IntValue {
   int64 value = 1;
 }
