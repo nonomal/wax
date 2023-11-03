@@ -161,12 +161,17 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> {
             Container(height: 20),
             Container(
               margin: const EdgeInsets.only(left: 20, right: 20),
-              child: Text(
-                widget.comicSimple.title,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+              child: GestureDetector(
+                onLongPress: () {
+                  confirmCopy(context, widget.comicSimple.title);
+                },
+                child: Text(
+                  widget.comicSimple.title,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -190,6 +195,13 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> {
                   const TextSpan(text: "  "),
                 ],
               )),
+            ),
+            Container(height: 10),
+            Container(
+              margin: const EdgeInsets.only(left: 20, right: 20),
+              child: Wrap(
+                children: (item.comicInfo.labels.map(_buildLabel)).toList(),
+              ),
             ),
             Container(height: 10),
             Container(
@@ -280,6 +292,36 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> {
         }
         return Container();
       },
+    );
+  }
+
+  Widget _buildLabel(String tag) {
+    return GestureDetector(
+      onTap: () {
+        // Navigator.of(context)
+        //     .push(MaterialPageRoute(builder: (BuildContext context) {
+        //   return BrowserScreen(tag: tag);
+        // }));
+      },
+      child: Card(
+        elevation: 0,
+        child: Text.rich(TextSpan(
+          style: const TextStyle(fontSize: 10),
+          children: [
+            WidgetSpan(
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+                child: Container(
+                  color: Colors.grey.withAlpha(20),
+                  padding: const EdgeInsets.only(
+                      top: 4, bottom: 4, left: 4, right: 4),
+                  child: Text(tag),
+                ),
+              ),
+            ),
+          ],
+        )),
+      ),
     );
   }
 

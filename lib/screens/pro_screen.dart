@@ -202,6 +202,7 @@ class _ProServerNameWidgetState extends State<ProServerNameWidget> {
           context,
           title: "选择发电方式",
           values: {
+            "核能发电": "JP",
             "风力发电": "HK",
             "水力发电": "US",
           },
@@ -218,6 +219,8 @@ class _ProServerNameWidgetState extends State<ProServerNameWidget> {
 
   String _loadServerName() {
     switch (_serverName) {
+      case "JP":
+        return "核能发电";
       case "HK":
         return "风力发电";
       case "US":

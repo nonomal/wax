@@ -5,8 +5,9 @@ import 'package:wax/basic/methods.dart';
 
 const _defaultHost = "https://www.wnacg.com";
 const _hostMap = {
-  "https://www.wnacg.com": "MAIN",
-  "https://www.htmanga9.top": "TOP9",
+  "https://www.hm1.lol": "H1",
+  "https://www.hm2.lol": "H2",
+  "https://www.hm3.lol": "H3",
 };
 
 late String host;
@@ -56,7 +57,7 @@ Widget hostSetting() {
     builder: (BuildContext context, void Function(void Function()) setState) {
       return ListTile(
         title: const Text("分流"),
-        subtitle: Text("${_hostMap[host]} (登录注册不上试试换分流或改变网络)"),
+        subtitle: Text("${currentHost()} (登录注册不上试试换分流或改变网络)"),
         onTap: () async {
           await chooseHost(context);
           setState(() {});
