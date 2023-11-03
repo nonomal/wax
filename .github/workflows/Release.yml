@@ -4,8 +4,6 @@ on:
   workflow_dispatch:
 
 env:
-  go_version_desktop: '1.17'
-  go_version_mobile: '1.18'
   flutter_channel: 'stable'
   ndk_version: '23.1.7779620'
   GH_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -32,7 +30,7 @@ jobs:
           ref: 'master'
       - uses: actions/setup-go@v2
         with:
-          go-version: ${{ env.go_version_desktop }}
+          go-version: '1.17'
       - name: Cache go modules
         uses: actions/cache@v3
         with:
@@ -58,47 +56,47 @@ jobs:
           - target: windows
             host: windows-latest
             flutter_version: '2.10.3'
-            go_version: ${{ env.go_version_desktop }}
+            go_version: '1.17'
           - target: macos
             host: macos-latest
             flutter_version: '2.10.3'
-            go_version: ${{ env.go_version_desktop }}
+            go_version: '1.17'
           - target: linux
             host: ubuntu-latest
             flutter_version: '2.10.3'
-            go_version: ${{ env.go_version_desktop }}
+            go_version: '1.17'
           - target: ios
             host: macos-latest
             flutter_version: '3.10.5'
-            go_version: ${{ env.go_version_mobile }}
+            go_version: '1.18'
           - target: ios
             host: macos-latest
             flutter_version: '2.10.5'
-            go_version: ${{ env.go_version_mobile }}
+            go_version: '1.18'
           - target: android-arm32
             host: ubuntu-latest
             flutter_version: '3.10.5'
-            go_version: ${{ env.go_version_mobile }}
+            go_version: '1.18'
           - target: android-arm64
             host: ubuntu-latest
             flutter_version: '3.10.5'
-            go_version: ${{ env.go_version_mobile }}
+            go_version: '1.18'
           - target: android-x86_64
             host: ubuntu-latest
             flutter_version: '3.10.5'
-            go_version: ${{ env.go_version_mobile }}
+            go_version: '1.18'
           - target: android-arm32
             host: ubuntu-latest
             flutter_version: '2.10.5'
-            go_version: ${{ env.go_version_mobile }}
+            go_version: '1.18'
           - target: android-arm64
             host: ubuntu-latest
             flutter_version: '2.10.5'
-            go_version: ${{ env.go_version_mobile }}
+            go_version: '1.18'
           - target: android-x86_64
             host: ubuntu-latest
             flutter_version: '2.10.5'
-            go_version: ${{ env.go_version_mobile }}
+            go_version: '1.18'
 
     runs-on: ${{ matrix.config.host }}
 
