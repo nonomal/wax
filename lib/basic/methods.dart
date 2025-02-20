@@ -410,4 +410,13 @@ class Methods {
         ));
     return StringValue.fromBuffer(buff).value;
   }
+
+  Future<FetchComicResult> fetchHistory(int id) async {
+    final buff = await _flatInvoke(
+        "fetchHistory",
+        PageQuery(
+          pageNumber: $fixnum.Int64(id),
+        ));
+    return FetchComicResult.fromBuffer(buff);
+  }
 }

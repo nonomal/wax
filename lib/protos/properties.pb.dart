@@ -3118,6 +3118,56 @@ class ComicViewLogDto extends $pb.GeneratedMessage {
   void clearPosition() => clearField(2);
 }
 
+class PageQuery extends $pb.GeneratedMessage {
+  factory PageQuery({
+    $fixnum.Int64? pageNumber,
+  }) {
+    final $result = create();
+    if (pageNumber != null) {
+      $result.pageNumber = pageNumber;
+    }
+    return $result;
+  }
+  PageQuery._() : super();
+  factory PageQuery.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory PageQuery.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'PageQuery', createEmptyInstance: create)
+    ..aInt64(1, _omitFieldNames ? '' : 'pageNumber', protoName: 'pageNumber')
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  PageQuery clone() => PageQuery()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  PageQuery copyWith(void Function(PageQuery) updates) => super.copyWith((message) => updates(message as PageQuery)) as PageQuery;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PageQuery create() => PageQuery._();
+  PageQuery createEmptyInstance() => create();
+  static $pb.PbList<PageQuery> createRepeated() => $pb.PbList<PageQuery>();
+  @$core.pragma('dart2js:noInline')
+  static PageQuery getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<PageQuery>(create);
+  static PageQuery? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $fixnum.Int64 get pageNumber => $_getI64(0);
+  @$pb.TagNumber(1)
+  set pageNumber($fixnum.Int64 v) { $_setInt64(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasPageNumber() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPageNumber() => clearField(1);
+}
+
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
 const _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');

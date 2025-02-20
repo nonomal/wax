@@ -655,3 +655,15 @@ final $typed_data.Uint8List comicViewLogDtoDescriptor = $convert.base64Decode(
     'Cg9Db21pY1ZpZXdMb2dEdG8SGAoHY29taWNJZBgBIAEoA1IHY29taWNJZBIaCghwb3NpdGlvbh'
     'gCIAEoA1IIcG9zaXRpb24=');
 
+@$core.Deprecated('Use pageQueryDescriptor instead')
+const PageQuery$json = {
+  '1': 'PageQuery',
+  '2': [
+    {'1': 'pageNumber', '3': 1, '4': 1, '5': 3, '10': 'pageNumber'},
+  ],
+};
+
+/// Descriptor for `PageQuery`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List pageQueryDescriptor = $convert.base64Decode(
+    'CglQYWdlUXVlcnkSHgoKcGFnZU51bWJlchgBIAEoA1IKcGFnZU51bWJlcg==');
+

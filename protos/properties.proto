@@ -247,3 +247,7 @@ message ComicViewLogDto {
   int64 position = 2;
 }
 
+message PageQuery {
+  int64 pageNumber = 1;
+}
+
