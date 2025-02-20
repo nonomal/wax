@@ -205,9 +205,12 @@ jobs:
         uses: android-actions/setup-android@v3
         with:
           cmdline-tools-version: 8512546
-          packages: 'platform-tools platforms;android-32 build-tools;30.0.2 ndk;27.0.12077973'
+          packages: 'platform-tools platforms;android-32 build-tools;30.0.2'
 
-
+      - if: steps.check_asset.outputs.skip_build != 'true' && ( matrix.config.target == 'android-arm32' || matrix.config.target == 'android-arm64' || matrix.config.target == 'android-x86_64' )
+        name: Install NDK
+        run: sdkmanager "ndk;28.0.13004108"
+  
       - name: Setup msys2 (Windows)
         if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.target == 'windows'
         uses: msys2/setup-msys2@v2
@@ -235,7 +238,7 @@ jobs:
       - name: Install go mobile (mobile)
         if: steps.check_asset.outputs.skip_build != 'true' && ( matrix.config.target == 'ios' || matrix.config.target == 'android-arm64' || matrix.config.target == 'android-arm32' || matrix.config.target == 'android-x86_64' )
         run: |
-          go install golang.org/x/mobile/cmd/gomobile@v0.0.0-20241213221354-a87c1cf6cf46
+          go install golang.org/x/mobile/cmd/gomobile@latest
 
       - name: Set-Version (All)
         if: steps.check_asset.outputs.skip_build != 'true'
