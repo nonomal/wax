@@ -215,7 +215,28 @@ class Methods {
   }
 
   Future updateViewLog($fixnum.Int64 id, int initRank) async {
-    // todo
+    return _flatInvoke(
+      "saveComicViewLog",
+       ComicViewLogDto(
+        comicId: id,
+        position: $fixnum.Int64(initRank),
+       ),
+    );
+  }
+
+  Future<int> loadViewLog($fixnum.Int64 id) async {
+    var buffer =  await _flatInvoke(
+      "loadComicViewLog",
+       ComicViewLogDto(
+        comicId: id,
+       ),
+    );
+    var result = ComicViewLogDto.fromBuffer(buffer);
+    return result.position.toInt();
+  }
+
+  Future autoClearViewLog() async {
+    return _flatInvoke("autoClearViewLog", Empty());
   }
 
   Future pushToDownloads(List<ComicSimple> list) {

@@ -18,11 +18,28 @@ class ComicInfoScreen extends StatefulWidget {
   State<StatefulWidget> createState() => _ComicInfoScreenState();
 }
 
-class _ComicInfoScreenState extends State<ComicInfoScreen> {
+class _ComicInfoScreenState extends State<ComicInfoScreen> with RouteAware {
   late Future<ComicInfoResult> _future;
   late Future<bool> _hasDownloadFuture;
+  int position = 0;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void didPopNext() {
+    Future.delayed(Duration.zero, ()async {
+        position = await methods.loadViewLog(widget.comicSimple.id);
+        setState(() {
+        });
+    });
+  }
 
   Future<ComicInfoResult> _loadComic() async {
+    position = await methods.loadViewLog(widget.comicSimple.id);
     var info = await methods.comicInfo(widget.comicSimple.id);
     var _ = methods.saveViewInfo(info); // 在后台线程保存浏览记录
     return info;
@@ -33,6 +50,12 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> {
     _future = _loadComic();
     _hasDownloadFuture = methods.hasDownload(widget.comicSimple.id);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
   }
 
   @override
@@ -91,6 +114,19 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> {
       body: Stack(
         children: [
           _body(),
+          if (position > 0) 
+            SafeArea(
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    right: 100,
+                    bottom: 30,
+                  ),
+                  child: _readContinueButton(),
+                ),
+              ),
+            ),
           SafeArea(
             child: Align(
               alignment: Alignment.bottomRight,
@@ -212,6 +248,33 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> {
             ),
           ],
         );
+      },
+    );
+  }
+
+  Widget _readContinueButton() {
+    return FutureBuilder(
+      future: _future,
+      builder: (BuildContext context, AsyncSnapshot<ComicInfoResult> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            !snapshot.hasError) {
+          return FloatingActionButton(
+            onPressed: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (BuildContext context) {
+                return ComicReaderScreen(
+                  comic: widget.comicSimple,
+                  initRank:  position,
+                  loadResult: () {
+                    return methods.comicPages(widget.comicSimple.id);
+                  },
+                );
+              }));
+            },
+            child: const Icon(Icons.auto_stories),
+          );
+        }
+        return Container();
       },
     );
   }

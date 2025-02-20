@@ -242,3 +242,8 @@ message ExportComicsQuery {
   int32 exportType = 3;
 }
 
+message ComicViewLogDto {
+  int64 comicId = 1;
+  int64 position = 2;
+}
+
