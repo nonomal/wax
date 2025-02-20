@@ -118,14 +118,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
-      - id: check_asset
-        name: Check asset
-        run: |
-          cd ci
-          go run ./cmd/check_asset
-
       - name: Setup flutter
-        if: steps.check_asset.outputs.skip_build != 'true'
+        if: true
         uses: subosito/flutter-action@v2
         with:
           channel: ${{ env.flutter_channel }}
@@ -133,7 +127,7 @@ jobs:
           architecture: x64
 
       - name: Check core
-        if: steps.check_asset.outputs.skip_build != 'true'
+        if: true
         uses: actions/checkout@v3
         with:
           repository: 'niuhuan/wax-go-core'
@@ -141,21 +135,21 @@ jobs:
           path: 'go'
 
       - name: Cache Flutter dependencies (Linux/Android)
-        if: steps.check_asset.outputs.skip_build != 'true' && ( matrix.config.target == 'android-arm32' || matrix.config.target == 'android-arm64' || matrix.config.target == 'android-x86_64' || matrix.config.target == 'linux' )
+        if: true && ( matrix.config.target == 'android-arm32' || matrix.config.target == 'android-arm64' || matrix.config.target == 'android-x86_64' || matrix.config.target == 'linux' )
         uses: actions/cache@v3
         with:
           path: /opt/hostedtoolcache/flutter
           key: ${{ runner.os }}-flutter
 
       - name: Cache Flutter dependencies (Mac host)
-        if: steps.check_asset.outputs.skip_build != 'true' && ( matrix.config.target == 'ios' || matrix.config.target == 'macos' )
+        if: true && ( matrix.config.target == 'ios' || matrix.config.target == 'macos' )
         uses: actions/cache@v3
         with:
           path: /Users/runner/hostedtoolcache/flutter
           key: ${{ runner.os }}-flutter
 
       - name: Cache Gradle dependencies (Android)
-        if: steps.check_asset.outputs.skip_build != 'true' && ( matrix.config.target == 'android-arm32' || matrix.config.target == 'android-arm64' || matrix.config.target == 'android-x86_64' )
+        if: true && ( matrix.config.target == 'android-arm32' || matrix.config.target == 'android-arm64' || matrix.config.target == 'android-x86_64' )
         uses: actions/cache@v3
         with:
           path: |
@@ -166,14 +160,14 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Setup java (Android)
-        if: steps.check_asset.outputs.skip_build != 'true' && ( matrix.config.target == 'android-arm32' || matrix.config.target == 'android-arm64' || matrix.config.target == 'android-x86_64' )
+        if: true && ( matrix.config.target == 'android-arm32' || matrix.config.target == 'android-arm64' || matrix.config.target == 'android-x86_64' )
         uses: actions/setup-java@v3
         with:
           java-version: 11
           distribution: 'zulu'
 
       - name: Setup android tools (Android)
-        if: steps.check_asset.outputs.skip_build != 'true' && ( matrix.config.target == 'android-arm32' || matrix.config.target == 'android-arm64' || matrix.config.target == 'android-x86_64' )
+        if: true && ( matrix.config.target == 'android-arm32' || matrix.config.target == 'android-arm64' || matrix.config.target == 'android-x86_64' )
         uses: maxim-lobanov/setup-android-tools@v1
         with:
           packages: |
@@ -183,13 +177,13 @@ jobs:
             ndk;${{ env.ndk_version }}
 
       - name: Setup msys2 (Windows)
-        if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.target == 'windows'
+        if: true && matrix.config.target == 'windows'
         uses: msys2/setup-msys2@v2
         with:
           install: gcc make
 
       - name: Install dependencies (Linux)
-        if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.target == 'linux'
+        if: true && matrix.config.target == 'linux'
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         run: |
@@ -202,23 +196,23 @@ jobs:
           sudo apt-get install -y libgl1-mesa-dev xorg-dev libfuse2
 
       - name: Install hover (desktop)
-        if: steps.check_asset.outputs.skip_build != 'true' && ( matrix.config.target == 'linux' || matrix.config.target == 'windows' || matrix.config.target == 'macos')
+        if: true && ( matrix.config.target == 'linux' || matrix.config.target == 'windows' || matrix.config.target == 'macos')
         run: |
           go install github.com/go-flutter-desktop/hover@latest
 
       - name: Install go mobile (mobile)
-        if: steps.check_asset.outputs.skip_build != 'true' && ( matrix.config.target == 'ios' || matrix.config.target == 'android-arm64' || matrix.config.target == 'android-arm32' || matrix.config.target == 'android-x86_64' )
+        if: true && ( matrix.config.target == 'ios' || matrix.config.target == 'android-arm64' || matrix.config.target == 'android-arm32' || matrix.config.target == 'android-x86_64' )
         run: |
           go install golang.org/x/mobile/cmd/gomobile@latest
 
       - name: Set-Version (All)
-        if: steps.check_asset.outputs.skip_build != 'true'
+        if: true
         run: |
           cd ci
           cp version.code.txt ../lib/assets/version.txt
 
       - name: Upgrade deps version (flutter2 non-mac)
-        if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.host != 'macos-latest' && startsWith(matrix.config.flutter_version, '2')
+        if: true && matrix.config.host != 'macos-latest' && startsWith(matrix.config.flutter_version, '2')
         run: |
           sed -i "s/another_xlider: ^1.0.1+2/another_xlider: 1.0.1+2/g" pubspec.yaml
           sed -i "s/flutter_styled_toast: ^2.0.0/flutter_styled_toast: 2.0.0/g" pubspec.yaml
@@ -230,7 +224,7 @@ jobs:
           flutter pub get
 
       - name: Upgrade deps version (flutter2 mac)
-        if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.host == 'macos-latest' && startsWith(matrix.config.flutter_version, '2')
+        if: true && matrix.config.host == 'macos-latest' && startsWith(matrix.config.flutter_version, '2')
         run: |
           brew install gnu-sed
           gsed -i "s/another_xlider: ^1.0.1+2/another_xlider: 1.0.1+2/g" pubspec.yaml
@@ -243,7 +237,7 @@ jobs:
           flutter pub get
 
       - name: Build (windows)
-        if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.target == 'windows'
+        if: true && matrix.config.target == 'windows'
         run: |
           hover build windows
           curl -JOL https://github.com/niuhuan/static-resources/releases/download/windows_build_tools/Resource_Hacker_5.1.8.zip
@@ -256,13 +250,13 @@ jobs:
           Compress-Archive * ../../../../build/build.zip
 
       - name: Build (macos)
-        if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.target == 'macos'
+        if: true && matrix.config.target == 'macos'
         run: |
           hover build darwin-dmg
           mv go/build/outputs/darwin-dmg-release/*.dmg build/build.dmg
 
       - name: Build (linux)
-        if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.target == 'linux'
+        if: true && matrix.config.target == 'linux'
         run: |
           curl -JOL https://github.com/junmer/source-han-serif-ttf/raw/master/SubsetTTF/CN/SourceHanSerifCN-Regular.ttf
           mkdir -p fonts
@@ -272,32 +266,32 @@ jobs:
           mv go/build/outputs/linux-appimage-release/*.AppImage build/build.AppImage
 
       - name: Append application-identifier (ios)
-        if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.target == 'ios'
+        if: true && matrix.config.target == 'ios'
         run: |
           /usr/libexec/PlistBuddy -c 'Add :application-identifier string niuhuan.wax' ios/Runner/Info.plist
 
       - name: Build (ios)
-        if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.target == 'ios'
+        if: true && matrix.config.target == 'ios'
         run: |
           sh scripts/build-ipa.sh
 
       - name: Build (android-arm32)
-        if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.target == 'android-arm32'
+        if: true && matrix.config.target == 'android-arm32'
         run: |
           sh scripts/build-apk-arm.sh
 
       - name: Build (android-arm64)
-        if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.target == 'android-arm64'
+        if: true && matrix.config.target == 'android-arm64'
         run: |
           sh scripts/build-apk-arm64.sh
 
       - name: Build (android-x86_64)
-        if: steps.check_asset.outputs.skip_build != 'true' && matrix.config.target == 'android-x86_64'
+        if: true && matrix.config.target == 'android-x86_64'
         run: |
           sh scripts/build-apk-x64.sh
 
       - name: Sign APK (Android)
-        if: steps.check_asset.outputs.skip_build != 'true' && ( matrix.config.target == 'android-arm32' || matrix.config.target == 'android-arm64' || matrix.config.target == 'android-x86_64' )
+        if: true && ( matrix.config.target == 'android-arm32' || matrix.config.target == 'android-arm64' || matrix.config.target == 'android-x86_64' )
         env:
           KEY_FILE_BASE64: ${{ secrets.KEY_FILE_BASE64 }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
