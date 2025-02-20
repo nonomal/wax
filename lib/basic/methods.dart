@@ -200,8 +200,11 @@ class Methods {
     return _flatInvoke("inputCdKey", Puff(value: k));
   }
 
-  Future saveViewInfo(ComicInfoResult info) async {
-    // todo
+  Future saveViewInfo(ComicSimple simple) async {
+    return _flatInvoke(
+      "initComicViewLog",
+       simple,
+    );
   }
 
   Future<bool> hasDownload($fixnum.Int64 comicId) async {

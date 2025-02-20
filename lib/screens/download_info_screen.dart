@@ -147,10 +147,11 @@ class _DownloadInfoScreenState extends State<DownloadInfoScreen>
                   !snapshot.hasError) {
                 return SafeArea(
                   child: Align(
-                    alignment: Alignment. bottomRight,
+                    alignment: Alignment.bottomRight,
                     child: Padding(
                       padding: const EdgeInsets.only(right: 30, bottom: 30),
                       child: FloatingActionButton(
+                        key: const Key("READ_BUTTON"),
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (BuildContext context) {
@@ -186,6 +187,7 @@ class _DownloadInfoScreenState extends State<DownloadInfoScreen>
           ),
           if (position > 0)
             FutureBuilder(
+              key: const Key("CONTINUE_READ_BUTTON"),
               future: _future,
               builder: (BuildContext context,
                   AsyncSnapshot<ComicDownloadInfoDto> snapshot) {

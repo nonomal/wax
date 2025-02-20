@@ -31,17 +31,16 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> with RouteAware {
 
   @override
   void didPopNext() {
-    Future.delayed(Duration.zero, ()async {
-        position = await methods.loadViewLog(widget.comicSimple.id);
-        setState(() {
-        });
+    Future.delayed(Duration.zero, () async {
+      position = await methods.loadViewLog(widget.comicSimple.id);
+      setState(() {});
     });
   }
 
   Future<ComicInfoResult> _loadComic() async {
     position = await methods.loadViewLog(widget.comicSimple.id);
     var info = await methods.comicInfo(widget.comicSimple.id);
-    var _ = methods.saveViewInfo(info); // 在后台线程保存浏览记录
+    var _ = methods.saveViewInfo(widget.comicSimple); // 在后台线程保存浏览记录
     return info;
   }
 
@@ -114,7 +113,7 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> with RouteAware {
       body: Stack(
         children: [
           _body(),
-          if (position > 0) 
+          if (position > 0)
             SafeArea(
               child: Align(
                 alignment: Alignment.bottomRight,
@@ -254,6 +253,7 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> with RouteAware {
 
   Widget _readContinueButton() {
     return FutureBuilder(
+      key: const Key("CONTINUE_READ_BUTTON"),
       future: _future,
       builder: (BuildContext context, AsyncSnapshot<ComicInfoResult> snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
@@ -264,7 +264,7 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> with RouteAware {
                   .push(MaterialPageRoute(builder: (BuildContext context) {
                 return ComicReaderScreen(
                   comic: widget.comicSimple,
-                  initRank:  position,
+                  initRank: position,
                   loadResult: () {
                     return methods.comicPages(widget.comicSimple.id);
                   },
@@ -286,6 +286,7 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> with RouteAware {
         if (snapshot.connectionState == ConnectionState.done &&
             !snapshot.hasError) {
           return FloatingActionButton(
+            key: const Key("READ_BUTTON"),
             onPressed: () {
               Navigator.of(context)
                   .push(MaterialPageRoute(builder: (BuildContext context) {
