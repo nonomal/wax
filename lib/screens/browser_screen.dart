@@ -5,6 +5,7 @@ import 'package:flutter_search_bar/flutter_search_bar.dart' as sb;
 import 'package:wax/basic/methods.dart';
 import 'package:wax/configs/host.dart';
 import 'package:wax/protos/properties.pb.dart';
+import 'package:wax/screens/comic_histories_screen.dart';
 import 'package:wax/screens/downloads_screen.dart';
 import 'package:wax/screens/favourite_screen.dart';
 import 'package:wax/screens/pro_screen.dart';
@@ -75,6 +76,15 @@ class _BrowserScreenState extends State<BrowserScreen>
       return AppBar(
         title: Text(_title()),
         actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (BuildContext context) {
+                return const ComicHistoriesScreen();
+              }));
+            },
+            icon: const Icon(Icons.history),
+          ),
           ...alwaysInActions(),
           IconButton(
             onPressed: () {
