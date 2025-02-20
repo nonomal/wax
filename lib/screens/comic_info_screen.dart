@@ -18,13 +18,29 @@ class ComicInfoScreen extends StatefulWidget {
   State<StatefulWidget> createState() => _ComicInfoScreenState();
 }
 
-class _ComicInfoScreenState extends State<ComicInfoScreen> {
+class _ComicInfoScreenState extends State<ComicInfoScreen> with RouteAware {
   late Future<ComicInfoResult> _future;
   late Future<bool> _hasDownloadFuture;
+  int position = 0;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void didPopNext() {
+    Future.delayed(Duration.zero, () async {
+      position = await methods.loadViewLog(widget.comicSimple.id);
+      setState(() {});
+    });
+  }
 
   Future<ComicInfoResult> _loadComic() async {
+    position = await methods.loadViewLog(widget.comicSimple.id);
     var info = await methods.comicInfo(widget.comicSimple.id);
-    var _ = methods.saveViewInfo(info); // 在后台线程保存浏览记录
+    var _ = methods.saveViewInfo(widget.comicSimple); // 在后台线程保存浏览记录
     return info;
   }
 
@@ -33,6 +49,12 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> {
     _future = _loadComic();
     _hasDownloadFuture = methods.hasDownload(widget.comicSimple.id);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
   }
 
   @override
@@ -91,6 +113,19 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> {
       body: Stack(
         children: [
           _body(),
+          if (position > 0)
+            SafeArea(
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    right: 100,
+                    bottom: 30,
+                  ),
+                  child: _readContinueButton(),
+                ),
+              ),
+            ),
           SafeArea(
             child: Align(
               alignment: Alignment.bottomRight,
@@ -161,12 +196,17 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> {
             Container(height: 20),
             Container(
               margin: const EdgeInsets.only(left: 20, right: 20),
-              child: Text(
-                widget.comicSimple.title,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+              child: GestureDetector(
+                onLongPress: () {
+                  confirmCopy(context, widget.comicSimple.title);
+                },
+                child: Text(
+                  widget.comicSimple.title,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -195,11 +235,46 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> {
             Container(
               margin: const EdgeInsets.only(left: 20, right: 20),
               child: Wrap(
+                children: (item.comicInfo.labels.map(_buildLabel)).toList(),
+              ),
+            ),
+            Container(height: 10),
+            Container(
+              margin: const EdgeInsets.only(left: 20, right: 20),
+              child: Wrap(
                 children: (item.comicInfo.tags.map(_buildTag)).toList(),
               ),
             ),
           ],
         );
+      },
+    );
+  }
+
+  Widget _readContinueButton() {
+    return FutureBuilder(
+      key: const Key("CONTINUE_READ_BUTTON"),
+      future: _future,
+      builder: (BuildContext context, AsyncSnapshot<ComicInfoResult> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            !snapshot.hasError) {
+          return FloatingActionButton(
+            onPressed: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (BuildContext context) {
+                return ComicReaderScreen(
+                  comic: widget.comicSimple,
+                  initRank: position,
+                  loadResult: () {
+                    return methods.comicPages(widget.comicSimple.id);
+                  },
+                );
+              }));
+            },
+            child: const Icon(Icons.auto_stories),
+          );
+        }
+        return Container();
       },
     );
   }
@@ -211,6 +286,7 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> {
         if (snapshot.connectionState == ConnectionState.done &&
             !snapshot.hasError) {
           return FloatingActionButton(
+            key: const Key("READ_BUTTON"),
             onPressed: () {
               Navigator.of(context)
                   .push(MaterialPageRoute(builder: (BuildContext context) {
@@ -280,6 +356,36 @@ class _ComicInfoScreenState extends State<ComicInfoScreen> {
         }
         return Container();
       },
+    );
+  }
+
+  Widget _buildLabel(String tag) {
+    return GestureDetector(
+      onTap: () {
+        // Navigator.of(context)
+        //     .push(MaterialPageRoute(builder: (BuildContext context) {
+        //   return BrowserScreen(tag: tag);
+        // }));
+      },
+      child: Card(
+        elevation: 0,
+        child: Text.rich(TextSpan(
+          style: const TextStyle(fontSize: 10),
+          children: [
+            WidgetSpan(
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+                child: Container(
+                  color: Colors.grey.withAlpha(20),
+                  padding: const EdgeInsets.only(
+                      top: 4, bottom: 4, left: 4, right: 4),
+                  child: Text(tag),
+                ),
+              ),
+            ),
+          ],
+        )),
+      ),
     );
   }
 

@@ -48,7 +48,7 @@ class _InitScreenState extends State<InitScreen> {
     await initDownloadThreadCount();
     autoCheckNewVersion();
     await initLogin();
-    if (host.isEmpty) {
+    if (await methods.loadProperty(k: "last_username") == "") {
       Future.delayed(Duration.zero, () async {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (BuildContext context) {

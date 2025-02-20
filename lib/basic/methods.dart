@@ -189,8 +189,22 @@ class Methods {
     ));
   }
 
-  Future saveViewInfo(ComicInfoResult info) async {
-    // todo
+  Future<IsPro> reloadPro() async {
+    return IsPro.fromBuffer(await _flatInvoke(
+      "reloadPro",
+      Empty(),
+    ));
+  }
+
+  Future inputCdKey(String k) {
+    return _flatInvoke("inputCdKey", Puff(value: k));
+  }
+
+  Future saveViewInfo(ComicSimple simple) async {
+    return _flatInvoke(
+      "initComicViewLog",
+       simple,
+    );
   }
 
   Future<bool> hasDownload($fixnum.Int64 comicId) async {
@@ -204,7 +218,28 @@ class Methods {
   }
 
   Future updateViewLog($fixnum.Int64 id, int initRank) async {
-    // todo
+    return _flatInvoke(
+      "saveComicViewLog",
+       ComicViewLogDto(
+        comicId: id,
+        position: $fixnum.Int64(initRank),
+       ),
+    );
+  }
+
+  Future<int> loadViewLog($fixnum.Int64 id) async {
+    var buffer =  await _flatInvoke(
+      "loadComicViewLog",
+       ComicViewLogDto(
+        comicId: id,
+       ),
+    );
+    var result = ComicViewLogDto.fromBuffer(buffer);
+    return result.position.toInt();
+  }
+
+  Future autoClearViewLog() async {
+    return _flatInvoke("autoClearViewLog", Empty());
   }
 
   Future pushToDownloads(List<ComicSimple> list) {
@@ -339,14 +374,49 @@ class Methods {
     );
   }
 
-  Future setIsPro(
-    bool isPro,
-  ) async {
+  Future exportToDir(
+    String folder,
+    List<$fixnum.Int64> comicIds,
+    int exportType,
+  ) {
     return _flatInvoke(
-      "setIsPro",
-      SetIsPro(
-        isPro: isPro,
+      "exportToDir",
+      ExportComicsQuery(
+        comicIds: comicIds,
+        folder: folder,
+        exportType: exportType,
       ),
     );
+  }
+
+  Future<String> iosGetDocumentDir() async {
+    return await _channel.invokeMethod('iosGetDocumentDir', '');
+  }
+
+  Future<String> getProServerName() async {
+    final buff = await _flatInvoke(
+        "getProServerName",
+        FavoritesPartitionsQuery(
+          host: host,
+        ));
+    return StringValue.fromBuffer(buff).value;
+  }
+
+  Future<String> setProServerName(String severName) async {
+    final buff = await _flatInvoke(
+        "setProServerName",
+        StringValue(
+          value: severName,
+        ));
+    return StringValue.fromBuffer(buff).value;
+  }
+
+  Future<FetchComicResult> fetchHistory(int id) async {
+    final buff = await _flatInvoke(
+        "fetchHistory",
+        PageQuery(
+          pageNumber: $fixnum.Int64(id),
+        ));
+    return FetchComicResult.fromBuffer(buff);
   }
 }

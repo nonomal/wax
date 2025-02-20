@@ -11,10 +11,6 @@ import (
 	"strings"
 )
 
-const owner = "niuhuan"
-const repo = "wax"
-const ua = "niuhuan wax ci"
-
 func main() {
 	// get ghToken
 	ghToken := os.Getenv("GH_TOKEN")
@@ -23,17 +19,7 @@ func main() {
 		os.Exit(1)
 	}
 	// get version
-	var version commons.Version
-	codeFile, err := ioutil.ReadFile("version.code.txt")
-	if err != nil {
-		panic(err)
-	}
-	version.Code = strings.TrimSpace(string(codeFile))
-	infoFile, err := ioutil.ReadFile("version.info.txt")
-	if err != nil {
-		panic(err)
-	}
-	version.Info = strings.TrimSpace(string(infoFile))
+	version := commons.LoadVersion()
 	// get target
 	target := os.Getenv("TARGET")
 	if target == "" {
@@ -47,42 +33,52 @@ func main() {
 		os.Exit(1)
 	}
 	//
-	var releaseFilePath string
 	var releaseFileName string
+	switch target {
+	case "macos":
+		releaseFileName = fmt.Sprintf("wax-%v-macos-intel.dmg", version.Code)
+	case "ios":
+		releaseFileName = fmt.Sprintf("wax-%v-ios-nosign.ipa", version.Code)
+	case "windows":
+		releaseFileName = fmt.Sprintf("wax-%v-windows-x86_64.zip", version.Code)
+	case "linux":
+		releaseFileName = fmt.Sprintf("wax-%v-linux-x86_64.AppImage", version.Code)
+	case "android-arm32":
+		releaseFileName = fmt.Sprintf("wax-%v-android-arm32.apk", version.Code)
+	case "android-arm64":
+		releaseFileName = fmt.Sprintf("wax-%v-android-arm64.apk", version.Code)
+	case "android-x86_64":
+		releaseFileName = fmt.Sprintf("wax-%v-android-x86_64.apk", version.Code)
+	}
+	if strings.HasPrefix(flutterVersion, "2.") {
+		releaseFileName = "z-of-" + releaseFileName
+	}
+	//
+	var releaseFilePath string
 	var contentType string
 	var contentLength int64
 	switch target {
 	case "macos":
 		releaseFilePath = "build/build.dmg"
-		releaseFileName = fmt.Sprintf("wax-%v-macos-intel.dmg", version.Code)
 		contentType = "application/octet-stream"
 	case "ios":
 		releaseFilePath = "build/nosign.ipa"
-		releaseFileName = fmt.Sprintf("wax-%v-ios-nosign.ipa", version.Code)
 		contentType = "application/octet-stream"
 	case "windows":
 		releaseFilePath = "build/build.zip"
-		releaseFileName = fmt.Sprintf("wax-%v-windows-x86_64.zip", version.Code)
 		contentType = "application/octet-stream"
 	case "linux":
 		releaseFilePath = "build/build.AppImage"
-		releaseFileName = fmt.Sprintf("wax-%v-linux-x86_64.AppImage", version.Code)
 		contentType = "application/octet-stream"
 	case "android-arm32":
 		releaseFilePath = "build/app/outputs/flutter-apk/app-release.apk"
-		releaseFileName = fmt.Sprintf("wax-%v-android-arm32.apk", version.Code)
 		contentType = "application/octet-stream"
 	case "android-arm64":
 		releaseFilePath = "build/app/outputs/flutter-apk/app-release.apk"
-		releaseFileName = fmt.Sprintf("wax-%v-android-arm64.apk", version.Code)
 		contentType = "application/octet-stream"
 	case "android-x86_64":
 		releaseFilePath = "build/app/outputs/flutter-apk/app-release.apk"
-		releaseFileName = fmt.Sprintf("wax-%v-android-x86_64.apk", version.Code)
 		contentType = "application/octet-stream"
-	}
-	if strings.HasPrefix(flutterVersion, "2") {
-		releaseFileName = "z-old_flutter-" + releaseFileName
 	}
 	releaseFilePath = path.Join("..", releaseFilePath)
 	info, err := os.Stat(releaseFilePath)
@@ -93,13 +89,13 @@ func main() {
 	// get version
 	getReleaseRequest, err := http.NewRequest(
 		"GET",
-		fmt.Sprintf("https://api.github.com/repos/%v/%v/releases/tags/%v", owner, repo, version.Code),
+		fmt.Sprintf("https://api.github.com/repos/%v/%v/releases/tags/%v", commons.Owner, commons.Repo, version.Code),
 		nil,
 	)
 	if err != nil {
 		panic(err)
 	}
-	getReleaseRequest.Header.Set("User-Agent", ua)
+	getReleaseRequest.Header.Set("User-Agent", commons.Ua)
 	getReleaseRequest.Header.Set("Authorization", "token "+ghToken)
 	getReleaseResponse, err := http.DefaultClient.Do(getReleaseRequest)
 	if err != nil {
@@ -124,12 +120,12 @@ func main() {
 		panic(err)
 	}
 	defer file.Close()
-	uploadUrl := fmt.Sprintf("https://uploads.github.com/repos/%v/%v/releases/%v/assets?name=%v", owner, repo, release.Id, releaseFileName)
+	uploadUrl := fmt.Sprintf("https://uploads.github.com/repos/%v/%v/releases/%v/assets?name=%v", commons.Owner, commons.Repo, release.Id, releaseFileName)
 	uploadRequest, err := http.NewRequest("POST", uploadUrl, file)
 	if err != nil {
 		panic(err)
 	}
-	uploadRequest.Header.Set("User-Agent", ua)
+	uploadRequest.Header.Set("User-Agent", commons.Ua)
 	uploadRequest.Header.Set("Authorization", "token "+ghToken)
 	uploadRequest.Header.Set("Content-Type", contentType)
 	uploadRequest.ContentLength = contentLength

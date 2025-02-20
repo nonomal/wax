@@ -45,9 +45,11 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-lib/protos/
-go/protos/
+#lib/protos/
+#go/protos/
 go/mobile/lib/*.jar
 go/mobile/lib/*.aar
 go/mobile/lib/*.xcframework
 lib/assets/version.txt
+
+.vscode/

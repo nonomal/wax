@@ -17,6 +17,7 @@ Future initAutoClean() async {
     autoClean = "${(1000 * 3600 * 24 * 7)}";
   }
   await methods.autoClean(time: int.parse(autoClean));
+  await methods.autoClearViewLog();
 }
 
 String autoCleanName(BuildContext context) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wax/configs/themes.dart';
 import 'package:wax/configs/versions.dart';
+import 'package:wax/screens/comic_histories_screen.dart';
 
 import '../configs/login_state.dart';
 import '../configs/volume_controller.dart';
@@ -20,6 +21,16 @@ class SettingsScreen extends StatelessWidget {
           const VersionInfo(),
           const Divider(),
           const LoginStateSetting(),
+          const Divider(),
+          ListTile(
+            title: const Text("历史记录"),
+            onTap: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (BuildContext context) {
+                return const ComicHistoriesScreen();
+              }));
+            },
+          ),
           const Divider(),
           lightThemeSetting(),
           darkThemeSetting(),
